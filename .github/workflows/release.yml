@@ -1,0 +1,105 @@
+name: Build and Release Extension
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build extension
+        run: pnpm run build
+
+      - name: Resolve version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid version: $VERSION"
+            echo "Expected format: v1.2.3 (or prerelease like v1.2.3-beta.1)"
+            exit 1
+          fi
+
+          NORMALIZED_VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "normalized_version=$NORMALIZED_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Sync manifest version in build output
+        run: |
+          node -e "const fs=require('fs'); const path='dist/manifest.json'; const manifest=JSON.parse(fs.readFileSync(path,'utf8')); manifest.version='${{ steps.version.outputs.normalized_version }}'; fs.writeFileSync(path, JSON.stringify(manifest, null, 2) + '\n');"
+
+      - name: Verify build output
+        run: |
+          echo "Build output contents:"
+          ls -la dist/
+          test -f dist/manifest.json || (echo "manifest.json missing in dist/" && exit 1)
+          test -f dist/index.html || (echo "index.html missing in dist/" && exit 1)
+          echo "Build output looks valid"
+
+      - name: Create extension zip
+        id: package
+        run: |
+          ZIP_NAME="startpage-extension-${{ steps.version.outputs.version }}.zip"
+          cd dist
+          zip -r "../$ZIP_NAME" .
+          cd ..
+          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+          echo "Extension zip created:"
+          ls -la "$ZIP_NAME"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: StartPage Extension ${{ steps.version.outputs.version }}
+          body: |
+            ## StartPage Extension ${{ steps.version.outputs.version }}
+
+            ### Installation
+            1. Download `${{ steps.package.outputs.zip_name }}`
+            2. Extract the zip file
+            3. Open Chrome and go to `chrome://extensions/`
+            4. Enable "Developer mode" in the top right
+            5. Click "Load unpacked" and select the extracted folder
+
+            ### Notes
+            - `manifest.version` is set from this release tag.
+            - See commit history for detailed changes.
+          files: ${{ steps.package.outputs.zip_name }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
