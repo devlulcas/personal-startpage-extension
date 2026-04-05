@@ -1,0 +1,157 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	width: min(340px, calc(100vw - var(--space-8)));
+}
+
+.progressButton {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	border: none;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	color: var(--on-surface);
+	padding: 0;
+	cursor: pointer;
+}
+
+.progressTrack {
+	height: 8px;
+	flex: 1;
+	border-radius: var(--radius-pill);
+	background: var(--surface-3);
+	overflow: hidden;
+}
+
+.progressFill {
+	height: 100%;
+	border-radius: var(--radius-pill);
+	background: var(--primary);
+	transition: width 180ms ease;
+}
+
+.amountText {
+	font-size: var(--text-xs);
+	color: var(--on-surface-variant);
+	min-width: max-content;
+}
+
+.cupsRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-1);
+}
+
+.cupTick {
+	border: none;
+	background: transparent;
+	padding: 2px;
+	min-width: auto;
+	min-height: auto;
+	cursor: pointer;
+	color: var(--on-surface-variant);
+}
+
+.cupTick[aria-pressed="true"] {
+	color: var(--primary);
+}
+
+.cupIcon {
+	display: block;
+}
+
+.overlay {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: oklch(from var(--surface) calc(l + 0.1) c h / 0.7);
+	backdrop-filter: blur(8px);
+}
+
+.modal {
+	width: min(92vw, 680px);
+	max-height: min(88vh, 760px);
+	border: 1px solid var(--outline-variant);
+	border-radius: var(--radius-lg);
+	background: var(--surface);
+	color: var(--on-surface);
+	overflow: hidden;
+}
+
+.dialog {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.dialogHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-4) var(--space-6);
+}
+
+.title {
+	margin: 0;
+	font-size: var(--text-xl);
+}
+
+.closeButton {
+	border: none;
+	border-radius: var(--radius-pill);
+	padding: var(--space-2) var(--space-4);
+	background: var(--surface-2);
+	color: var(--on-surface);
+	cursor: pointer;
+}
+
+.dialogBody {
+	padding: var(--space-4) var(--space-6) var(--space-6);
+}
+
+.chart {
+	width: 100%;
+	height: auto;
+}
+
+.chartBar {
+	fill: var(--secondary-container);
+}
+
+.goalLine {
+	stroke: var(--primary);
+	stroke-width: 2;
+	stroke-dasharray: 6 4;
+}
+
+.goalLabel {
+	fill: var(--primary);
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.dayLabel {
+	fill: var(--on-surface-variant);
+	font-size: 11px;
+	text-anchor: middle;
+}
+
+.valueLabel {
+	fill: var(--on-surface);
+	font-size: 11px;
+	text-anchor: middle;
+}
+
+.statusMessage,
+.errorMessage {
+	margin: 0;
+	color: var(--on-surface-variant);
+}
+
+.errorMessage {
+	color: var(--error);
+}

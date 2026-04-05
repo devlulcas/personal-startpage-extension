@@ -1,0 +1,104 @@
+.slider {
+	display: grid;
+	grid-template-areas:
+		"label output"
+		"track track";
+	grid-template-columns: minmax(0, 1fr) auto;
+	row-gap: var(--space-2);
+	column-gap: var(--space-3);
+	width: 100%;
+}
+
+.label {
+	grid-area: label;
+	color: var(--on-surface);
+	font-size: var(--text-sm);
+}
+
+.output {
+	grid-area: output;
+	color: var(--on-surface-variant);
+	font-size: var(--text-sm);
+	text-align: end;
+}
+
+.track {
+	grid-area: track;
+	position: relative;
+	width: 100%;
+	height: 22px;
+}
+
+.trackBase {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	height: 6px;
+	transform: translateY(-50%);
+	border-radius: var(--radius-pill);
+	background: var(--surface-2);
+}
+
+.fill {
+	position: absolute;
+	inset-inline-start: var(--start, 0);
+	width: var(--size);
+	height: 100%;
+	border-radius: inherit;
+	background: var(--primary);
+}
+
+.thumb {
+	width: 18px;
+	height: 18px;
+	top: 50%;
+	border: 2px solid var(--primary);
+	border-radius: 50%;
+	background: var(--surface);
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+}
+
+.thumb[data-focus-visible] {
+	outline: 2px solid var(--outline);
+	outline-offset: 2px;
+}
+
+.thumb[data-dragging] {
+	background: var(--primary-container);
+}
+
+.slider[data-disabled] .trackBase {
+	background: var(--surface-1);
+}
+
+.slider[data-disabled] .fill {
+	background: var(--outline-variant);
+}
+
+.slider[data-disabled] .thumb {
+	border-color: var(--outline-variant);
+	background: var(--surface-1);
+	cursor: default;
+}
+
+@media (forced-colors: active) {
+	.trackBase,
+	.fill,
+	.thumb {
+		forced-color-adjust: none;
+	}
+
+	.trackBase {
+		background: CanvasText;
+	}
+
+	.fill {
+		background: Highlight;
+	}
+
+	.thumb {
+		border-color: Highlight;
+		background: Canvas;
+	}
+}

@@ -1,0 +1,16 @@
+.clockWidget {
+	display: flex;
+	flex-direction: column;
+	font-variant-numeric: tabular-nums;
+}
+
+.time {
+	font-size: 1.5rem;
+	font-weight: 500;
+	line-height: 1.2;
+}
+
+.date {
+	font-size: var(--text-sm);
+	color: var(--on-surface-variant);
+}

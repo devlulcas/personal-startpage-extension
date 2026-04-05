@@ -1,0 +1,27 @@
+{
+	"manifest_version": 3,
+	"name": "StartPage",
+	"version": "1.0.0",
+	"description": "A Simple New Tab (browser's home page)",
+	"permissions": ["search", "bookmarks", "favicon"],
+	"icons": {
+		"16": "icon16.png",
+		"32": "icon32.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	},
+	"action": {
+		"default_icon": "favicon.svg"
+	},
+	"chrome_url_overrides": {
+		"newtab": "index.html"
+	},
+	"incognito": "split",
+	"web_accessible_resources": [
+		{
+			"resources": ["_favicon/*"],
+			"matches": ["<all_urls>"],
+			"extension_ids": ["*"]
+		}
+	]
+}

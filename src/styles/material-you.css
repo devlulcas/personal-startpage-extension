@@ -1,0 +1,51 @@
+@layer base {
+	:root {
+		--seed: #6750a4;
+		--primary: oklch(70% 0.14 275);
+		--on-primary: oklch(25% 0.05 275);
+		--primary-container: oklch(35% 0.1 275);
+		--on-primary-container: oklch(92% 0.05 275);
+		--secondary: oklch(65% 0.1 250);
+		--on-secondary: oklch(25% 0.03 250);
+		--secondary-container: oklch(35% 0.08 250);
+		--on-secondary-container: oklch(92% 0.05 250);
+		--tertiary: oklch(65% 0.1 150);
+		--on-tertiary: oklch(25% 0.03 150);
+		--tertiary-container: oklch(35% 0.08 150);
+		--on-tertiary-container: oklch(92% 0.05 150);
+		--error: oklch(70% 0.15 25);
+		--on-error: oklch(25% 0.05 25);
+		--error-container: oklch(35% 0.1 25);
+		--on-error-container: oklch(95% 0.05 25);
+		--background: oklch(10% 0 0);
+		--on-background: oklch(92% 0 0);
+		--surface: oklch(12% 0 0);
+		--surface-dim: oklch(8% 0 0);
+		--surface-variant: oklch(25% 0 0);
+		--on-surface: oklch(92% 0 0);
+		--on-surface-variant: oklch(70% 0 0);
+		--outline: oklch(55% 0 0);
+		--outline-variant: oklch(32% 0 0);
+		--inverse-surface: oklch(92% 0 0);
+		--inverse-on-surface: oklch(15% 0 0);
+		--inverse-primary: oklch(55% 0.12 275);
+		--shadow: oklch(0% 0 0 / 0.5);
+		--surface-1: oklch(15% 0 0);
+		--surface-2: oklch(18% 0 0);
+		--surface-3: oklch(22% 0 0);
+		--surface-4: oklch(24% 0 0);
+		--surface-5: oklch(27% 0 0);
+	}
+
+	html,
+	body,
+	#root {
+		min-block-size: 100dvh;
+	}
+
+	body {
+		font-family: var(--font-family);
+		background-color: var(--surface);
+		color: var(--on-surface);
+	}
+}

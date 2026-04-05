@@ -1,0 +1,63 @@
+@property --radius-sm {
+	syntax: "<length>";
+	initial-value: 8px;
+	inherits: false;
+}
+
+@property --radius-md {
+	syntax: "<length>";
+	initial-value: 16px;
+	inherits: false;
+}
+
+@property --radius-lg {
+	syntax: "<length>";
+	initial-value: 24px;
+	inherits: false;
+}
+
+@property --radius-pill {
+	syntax: "<length>";
+	initial-value: 9999px;
+	inherits: false;
+}
+
+@layer base {
+	:root {
+		/* Typography Scale */
+		--font-family:
+			system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+			Ubuntu, sans-serif;
+
+		--text-xs: clamp(0.694rem, 0.6667rem + 0.1389vw, 0.75rem);
+		--text-sm: clamp(0.833rem, 0.7917rem + 0.2083vw, 0.875rem);
+		--text-base: clamp(1rem, 0.9167rem + 0.4167vw, 1rem);
+		--text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.125rem);
+		--text-xl: clamp(1.25rem, 1.0833rem + 0.8333vw, 1.25rem);
+		--text-2xl: clamp(1.5rem, 1.25rem + 1.25vw, 1.5rem);
+		--text-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 1.875rem);
+		--text-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 2.25rem);
+		--text-display: clamp(3rem, 2rem + 5vw, 4.5rem);
+
+		/* Spacing */
+		--space-1: 4px;
+		--space-2: 8px;
+		--space-3: 12px;
+		--space-4: 16px;
+		--space-5: 20px;
+		--space-6: 24px;
+		--space-8: 32px;
+		--space-10: 40px;
+		--space-12: 48px;
+		--space-16: 64px;
+
+		/* Animation */
+		--ease-standard: cubic-bezier(0.2, 0, 0, 1);
+		--ease-decelerate: cubic-bezier(0, 0, 0, 1);
+		--ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+		--ease-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+		--duration-short: 50ms;
+		--duration-medium: 250ms;
+		--duration-long: 500ms;
+	}
+}

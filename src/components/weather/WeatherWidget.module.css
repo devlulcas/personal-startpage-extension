@@ -1,0 +1,36 @@
+.weatherWidget {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding: var(--space-3) var(--space-5);
+	border-radius: var(--radius-pill);
+	background: var(--surface-2);
+}
+
+.weatherIcon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	aspect-ratio: 1;
+	border: none;
+	border-radius: var(--radius-pill);
+	background: transparent;
+	cursor: pointer;
+	color: var(--on-surface);
+}
+
+.weatherInfo {
+	display: flex;
+	flex-direction: column;
+}
+
+.temperature {
+	font-size: var(--text-lg);
+	font-weight: 500;
+}
+
+.location {
+	font-size: var(--text-xs);
+	color: var(--on-surface-variant);
+}

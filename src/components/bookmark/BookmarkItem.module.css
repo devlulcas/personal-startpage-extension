@@ -1,0 +1,62 @@
+.bookmarkItem {
+	list-style: none;
+}
+
+.bookmarkLink {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: var(--space-2) var(--space-3);
+	border-radius: var(--radius-pill);
+	background: var(--surface-2);
+	color: var(--on-surface);
+	text-decoration: none;
+	max-width: 180px;
+}
+
+.bookmarkIcon {
+	width: 24px;
+	height: 24px;
+	border-radius: 9999px;
+}
+
+.fallbackIcon {
+	color: var(--on-surface-variant);
+}
+
+.bookmarkTitle {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.contextMenuPopover {
+	--inner-radius: var(--radius-md);
+	--padding: var(--space-1);
+	--popover-radius: calc(var(--inner-radius) + var(--padding));
+
+	border: 1px solid var(--surface-border);
+	border-radius: var(--popover-radius);
+	background: color-mix(in oklch, var(--surface-1) 80%, transparent);
+	box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(8px);
+	padding: var(--padding);
+}
+
+.contextMenu {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 180px;
+	outline: none;
+}
+
+.contextMenuItem {
+	padding: var(--space-2) var(--space-3);
+	border-radius: var(--inner-radius);
+	cursor: default;
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
