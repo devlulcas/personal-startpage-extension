@@ -1,15 +1,15 @@
 import { createContext, useCallback, useContext, useMemo } from "react";
-import { useWallpaperDrop } from "../../hooks/useWallpaperDrop";
-import { useWallpaperStorage } from "../../hooks/useWallpaperStorage";
-import { toaster } from "../../utils/toast";
+import { toaster } from "../../components/toast/toast";
+import { useWallpaperDrop } from "../../hooks/use-wallpaper-drop";
+import { useWallpaperStorage } from "../../hooks/use-wallpaper-storage";
 
-interface WallpaperContextValue {
+type WallpaperContextValue = {
 	wallpaperImage: string | null;
 	loading: boolean;
 	setWallpaperFromFile: (file: File) => Promise<void>;
 	clearWallpaper: () => Promise<void>;
 	isDraggingFile: boolean;
-}
+};
 
 const WallpaperContext = createContext<WallpaperContextValue | null>(null);
 

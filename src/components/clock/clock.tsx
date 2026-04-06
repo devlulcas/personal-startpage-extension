@@ -1,5 +1,5 @@
-import { useClock } from "../../hooks/useClock";
-import styles from "./Clock.module.css";
+import { useClock } from "../../hooks/use-clock";
+import styles from "./clock.module.css";
 
 export function Clock() {
 	const { time, date } = useClock();

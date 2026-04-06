@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { queryKeys } from "../queries/queryKeys";
+import { queryKeys } from "../queries/query-keys";
 import { resolveResult } from "../queries/result-adapter";
 import { getBookmarks } from "../services/bookmarks-service";
 import type { Bookmark } from "../types/bookmark";

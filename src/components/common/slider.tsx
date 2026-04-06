@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { clsx } from "clsx";
 import type { SliderProps as AriaSliderProps } from "react-aria-components";
 import {
 	Slider as AriaSlider,
@@ -7,19 +7,13 @@ import {
 	SliderThumb,
 	SliderTrack,
 } from "react-aria-components";
-import styles from "./Slider.module.css";
+import styles from "./slider.module.css";
 
-interface SliderProps<T> extends Omit<AriaSliderProps<T>, "className"> {
+type SliderProps<T> = Omit<AriaSliderProps<T>, "className"> & {
 	className?: string;
 	label?: string;
 	thumbLabels?: string[];
-}
-
-function mergeSliderClassName<T extends number | number[]>(
-	className: SliderProps<T>["className"],
-) {
-	return className ? `${styles.slider} ${className}` : styles.slider;
-}
+};
 
 export function Slider<T extends number | number[]>({
 	label,
@@ -28,7 +22,7 @@ export function Slider<T extends number | number[]>({
 	...props
 }: SliderProps<T>) {
 	return (
-		<AriaSlider {...props} className={mergeSliderClassName(className)}>
+		<AriaSlider {...props} className={clsx(styles.slider, className)}>
 			{label && <Label className={styles.label}>{label}</Label>}
 			<SliderOutput className={styles.output}>
 				{({ state }) =>
@@ -48,7 +42,7 @@ export function Slider<T extends number | number[]>({
 									style={
 										{
 											"--size": `${state.getThumbPercent(0) * 100}%`,
-										} as CSSProperties
+										} as React.CSSProperties
 									}
 								/>
 							) : state.values.length === 2 ? (
@@ -58,7 +52,7 @@ export function Slider<T extends number | number[]>({
 										{
 											"--start": `${state.getThumbPercent(0) * 100}%`,
 											"--size": `${(state.getThumbPercent(1) - state.getThumbPercent(0)) * 100}%`,
-										} as CSSProperties
+										} as React.CSSProperties
 									}
 								/>
 							) : null}

@@ -4,10 +4,10 @@ import {
 	saveWallpaperSettings,
 } from "../../config/wallpaper";
 
-interface AppearanceContextValue {
+type AppearanceContextValue = {
 	blur: number;
 	setBlur: (blur: number) => void;
-}
+};
 
 const AppearanceContext = createContext<AppearanceContextValue | null>(null);
 

@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { WaterSettings } from "../config/water";
+import { queryKeys } from "../queries/query-keys";
+import { resolveResult } from "../queries/result-adapter";
 import {
 	getCurrentWeekWaterData,
 	getHydrationSettings,
@@ -7,8 +9,6 @@ import {
 	setTodayWaterByCupCount,
 	updateHydrationSettings,
 } from "../services/water-service";
-import { queryKeys } from "./queryKeys";
-import { resolveResult } from "./result-adapter";
 
 export function useWaterSettings() {
 	return useQuery({

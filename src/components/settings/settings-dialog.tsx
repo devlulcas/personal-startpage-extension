@@ -14,24 +14,24 @@ import {
 	TabPanels,
 	Tabs,
 } from "react-aria-components";
-import { useAppearanceContext } from "../../app/providers/AppearanceContext";
-import { useLocationContext } from "../../app/providers/LocationContext";
-import { useWallpaperContext } from "../../app/providers/WallpaperContext";
-import { useWeatherContext } from "../../app/providers/WeatherContext";
-import { Slider } from "../../components/common/Slider";
+import { useAppearanceContext } from "../../app/providers/appearance-context";
+import { useLocationContext } from "../../app/providers/location-context";
+import { useWallpaperContext } from "../../app/providers/wallpaper-context";
+import { useWeatherContext } from "../../app/providers/weather-context";
 import { apiKeyRotator } from "../../config/api-keys";
 import type { LocationConfig } from "../../config/location";
-import { useDebouncedValue } from "../../hooks/useDebouncedValue";
-import { queryKeys } from "../../queries/queryKeys";
-import { resolveResult } from "../../queries/result-adapter";
+import { useDebouncedValue } from "../../hooks/use-debounced-value";
 import {
 	useUpdateWaterSettingsMutation,
 	useWaterSettings,
-} from "../../queries/water-query";
+} from "../../hooks/use-water";
+import { queryKeys } from "../../queries/query-keys";
+import { resolveResult } from "../../queries/result-adapter";
 import { persistLocation } from "../../services/location-service";
 import { geocodeCity } from "../../services/weather-service";
-import { toaster } from "../../utils/toast";
-import styles from "./SettingsDialog.module.css";
+import { Slider } from "../common/slider";
+import { toaster } from "../toast/toast";
+import styles from "./settings-dialog.module.css";
 
 type SettingsDialogProps = {
 	isOpen: boolean;

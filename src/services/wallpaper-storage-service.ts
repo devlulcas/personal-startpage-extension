@@ -9,10 +9,10 @@ const DB_NAME = "startpage_db";
 const STORE_NAME = "wallpaper";
 const WALLPAPER_RECORD_KEY = "image";
 
-interface WallpaperLoadResult {
+type WallpaperLoadResult = {
 	imageUrl: string | null;
 	palette: Record<string, string> | null;
-}
+};
 
 async function openDB(): Promise<IDBDatabase> {
 	return new Promise((resolve, reject) => {

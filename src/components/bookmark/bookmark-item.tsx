@@ -2,12 +2,12 @@ import { LinkIcon, TrashIcon } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
 import { Menu, MenuItem, MenuSection, Popover } from "react-aria-components";
 import type { Bookmark } from "../../types/bookmark";
-import styles from "./BookmarkItem.module.css";
+import styles from "./bookmark-item.module.css";
 
-interface BookmarkItemProps {
+type BookmarkItemProps = {
 	bookmark: Bookmark;
 	onDeleteBookmark: (bookmark: Bookmark) => Promise<void>;
-}
+};
 
 export function BookmarkItem({
 	bookmark,

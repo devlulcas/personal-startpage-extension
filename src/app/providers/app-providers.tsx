@@ -1,9 +1,9 @@
-import { AppearanceProvider } from "./AppearanceContext";
-import { BookmarksProvider } from "./BookmarksContext";
-import { LocationProvider } from "./LocationContext";
-import { QueryProvider } from "./QueryProvider";
-import { WallpaperProvider } from "./WallpaperContext";
-import { WeatherProvider } from "./WeatherContext";
+import { AppearanceProvider } from "./appearance-context";
+import { BookmarksProvider } from "./bookmarks-context";
+import { LocationProvider } from "./location-context";
+import { QueryProvider } from "./query-provider";
+import { WallpaperProvider } from "./wallpaper-context";
+import { WeatherProvider } from "./weather-context";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
 	return (

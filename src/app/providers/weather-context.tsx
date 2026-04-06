@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useMemo } from "react";
 import type { LocationConfig } from "../../config/location";
-import { useWeather } from "../../hooks/useWeather";
+import { useWeather } from "../../hooks/use-weather";
 import type { WeatherData } from "../../services/weather-service";
-import { useLocationContext } from "./LocationContext";
+import { useLocationContext } from "./location-context";
 
-interface WeatherContextValue {
+type WeatherContextValue = {
 	weather: WeatherData | null;
 	loading: boolean;
 	errorMessage: string | null;
@@ -12,7 +12,7 @@ interface WeatherContextValue {
 		force?: boolean,
 		overrideLocation?: LocationConfig,
 	) => Promise<void>;
-}
+};
 
 const WeatherContext = createContext<WeatherContextValue | null>(null);
 

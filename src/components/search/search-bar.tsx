@@ -1,13 +1,13 @@
-import { MagnifyingGlass as MagnifyingGlassIcon } from "@phosphor-icons/react";
-import { type FormEvent, useState } from "react";
-import { useSearchSubmit } from "../../hooks/useSearchSubmit";
-import styles from "./SearchBar.module.css";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { useState } from "react";
+import { useSearchSubmit } from "../../hooks/use-search-submit";
+import styles from "./search-bar.module.css";
 
 export function SearchBar() {
 	const [query, setQuery] = useState("");
 	const submitSearch = useSearchSubmit();
 
-	function handleSubmit(event: FormEvent<HTMLFormElement>) {
+	function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 		submitSearch(query);
 	}

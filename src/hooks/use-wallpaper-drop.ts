@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-interface UseWallpaperDropOptions {
+type UseWallpaperDropOptions = {
 	onImageDropped: (file: File) => Promise<void>;
-}
+};
 
 export function useWallpaperDrop(options: UseWallpaperDropOptions) {
 	const { onImageDropped } = options;
@@ -11,7 +11,7 @@ export function useWallpaperDrop(options: UseWallpaperDropOptions) {
 	useEffect(() => {
 		let dragCounter = 0;
 
-		function onDragEnter(event: DragEvent) {
+		const onDragEnter = (event: DragEvent) => {
 			event.preventDefault();
 			if (!event.dataTransfer?.types.includes("Files")) {
 				return;
@@ -19,24 +19,24 @@ export function useWallpaperDrop(options: UseWallpaperDropOptions) {
 
 			dragCounter += 1;
 			setIsDraggingFile(true);
-		}
+		};
 
-		function onDragLeave(event: DragEvent) {
+		const onDragLeave = (event: DragEvent) => {
 			event.preventDefault();
 			dragCounter = Math.max(0, dragCounter - 1);
 			if (dragCounter === 0) {
 				setIsDraggingFile(false);
 			}
-		}
+		};
 
-		function onDragOver(event: DragEvent) {
+		const onDragOver = (event: DragEvent) => {
 			event.preventDefault();
 			if (event.dataTransfer) {
 				event.dataTransfer.dropEffect = "copy";
 			}
-		}
+		};
 
-		async function onDrop(event: DragEvent) {
+		const onDrop = async (event: DragEvent) => {
 			event.preventDefault();
 			dragCounter = 0;
 			setIsDraggingFile(false);
@@ -54,9 +54,9 @@ export function useWallpaperDrop(options: UseWallpaperDropOptions) {
 			}
 
 			await onImageDropped(imageFile);
-		}
+		};
 
-		async function onPaste(event: ClipboardEvent) {
+		const onPaste = async (event: ClipboardEvent) => {
 			const items = event.clipboardData?.items;
 			if (!items) {
 				return;
@@ -75,7 +75,7 @@ export function useWallpaperDrop(options: UseWallpaperDropOptions) {
 				await onImageDropped(file);
 				break;
 			}
-		}
+		};
 
 		document.addEventListener("dragenter", onDragEnter);
 		document.addEventListener("dragleave", onDragLeave);

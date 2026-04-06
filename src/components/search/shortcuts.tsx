@@ -1,12 +1,12 @@
 import {
-	Brain as BrainIcon,
-	ChatCircleText as ChatCircleTextIcon,
-	EnvelopeSimple as EnvelopeSimpleIcon,
-	GithubLogo as GithubLogoIcon,
-	Sparkle as SparkleIcon,
-	YoutubeLogo as YoutubeLogoIcon,
+	BrainIcon,
+	ChatCircleTextIcon,
+	EnvelopeSimpleIcon,
+	GithubLogoIcon,
+	SparkleIcon,
+	YoutubeLogoIcon,
 } from "@phosphor-icons/react";
-import styles from "./Shortcuts.module.css";
+import styles from "./shortcuts.module.css";
 
 const shortcuts = [
 	{ href: "https://github.com", label: "GitHub", icon: GithubLogoIcon },

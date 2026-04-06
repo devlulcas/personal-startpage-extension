@@ -1,4 +1,3 @@
-import { generateArrayOf } from "../mock";
 import type { Bookmark } from "../types/bookmark";
 import { err, ok, type Result } from "../types/result";
 
@@ -56,17 +55,6 @@ function sortRecentUsedBookmarks(bookmarks: Bookmark[]): Bookmark[] {
 export async function getBookmarks(): Promise<
 	Result<Bookmark[], BookmarkError>
 > {
-	if (import.meta.env.DEV) {
-		const mockBookmarks = generateArrayOf(10, (index) => ({
-			title: `Bookmark ${index + 1}`,
-			url: `https://example.com/${index + 1}`,
-			icon: `https://picsum.photos/200/200?random=${index + 1}`,
-			lastUsedAt: Date.now(),
-		}));
-
-		return ok(mockBookmarks);
-	}
-
 	if (!globalThis.chrome?.bookmarks?.getTree) {
 		return err(
 			"browser_api_unavailable",

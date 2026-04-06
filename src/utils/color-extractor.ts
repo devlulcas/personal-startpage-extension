@@ -1,14 +1,14 @@
-interface RGB {
+type RGB = {
 	r: number;
 	g: number;
 	b: number;
-}
+};
 
-interface HSL {
+type HSL = {
 	h: number;
 	s: number;
 	l: number;
-}
+};
 
 function rgbToHex(r: number, g: number, b: number): string {
 	return (

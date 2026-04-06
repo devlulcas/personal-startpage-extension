@@ -2,7 +2,7 @@ import { apiKeyRotator } from "../config/api-keys";
 import type { LocationConfig } from "../config/location";
 import { err, ok, type Result } from "../types/result";
 
-export interface WeatherData {
+export type WeatherData = {
 	temperature: number;
 	feelsLike: number;
 	humidity: number;
@@ -10,9 +10,9 @@ export interface WeatherData {
 	description: string;
 	icon: string;
 	location: string;
-}
+};
 
-interface OpenWeatherResponse {
+type OpenWeatherResponse = {
 	main: {
 		temp: number;
 		feels_like: number;
@@ -21,20 +21,20 @@ interface OpenWeatherResponse {
 	wind: {
 		speed: number;
 	};
-	weather: Array<{
+	weather: {
 		description: string;
 		icon: string;
-	}>;
+	}[];
 	name: string;
-}
+};
 
-interface GeocodingResponse {
+type GeocodingResponse = {
 	name: string;
 	lat: number;
 	lon: number;
 	country: string;
 	state?: string;
-}
+};
 
 type WeatherError = "no_api_key" | "network_error" | "api_error";
 type GeocodeError = "network_error" | "not_found";
@@ -43,11 +43,11 @@ const API_BASE = "https://api.openweathermap.org";
 const CACHE_KEY = "weather_cache";
 const CACHE_DURATION = 10 * 60 * 1000;
 
-interface CacheEntry {
+type CacheEntry = {
 	data: WeatherData;
 	timestamp: number;
 	cacheKey: string;
-}
+};
 
 function makeLocationCacheKey(location: LocationConfig): string {
 	return `${location.latitude}:${location.longitude}`;

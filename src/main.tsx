@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./app/App";
-import { AppProviders } from "./app/providers/AppProviders";
-import { AppToaster } from "./utils/toast";
+import { App } from "./app/app";
+import { AppProviders } from "./app/providers/app-providers";
+import { AppToaster } from "./components/toast/toast";
 import "./styles/global.css";
 
 const container = document.getElementById("root");

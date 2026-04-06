@@ -1,8 +1,8 @@
-interface ApiKeysConfig {
+type ApiKeysConfig = {
 	keys: string[];
 	currentIndex: number;
 	keysInputValue: string;
-}
+};
 
 class ApiKeyRotator {
 	private config: ApiKeysConfig;

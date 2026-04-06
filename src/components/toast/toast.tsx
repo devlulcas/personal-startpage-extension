@@ -4,11 +4,11 @@ import styles from "./toast.module.css";
 
 type ToastVariant = "success" | "error";
 
-interface ToastContentProps {
+type ToastContentProps = {
 	message: string;
 	variant: ToastVariant;
 	visible: boolean;
-}
+};
 
 function ToastContent({ message, variant, visible }: ToastContentProps) {
 	const variantClass =

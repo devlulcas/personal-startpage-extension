@@ -1,13 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import type { LocationConfig } from "../config/location";
-import { queryKeys } from "../queries/queryKeys";
+import { queryKeys } from "../queries/query-keys";
 import { ResultQueryError, resolveResult } from "../queries/result-adapter";
 import { getWeather, type WeatherData } from "../services/weather-service";
 
 const WEATHER_STALE_TIME = 10 * 60 * 1000;
 
-interface UseWeatherReturn {
+type UseWeatherReturn = {
 	weather: WeatherData | null;
 	loading: boolean;
 	errorMessage: string | null;
@@ -15,7 +15,7 @@ interface UseWeatherReturn {
 		force?: boolean,
 		overrideLocation?: LocationConfig,
 	) => Promise<void>;
-}
+};
 
 export function useWeather(location: LocationConfig | null): UseWeatherReturn {
 	const queryClient = useQueryClient();

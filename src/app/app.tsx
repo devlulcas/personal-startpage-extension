@@ -1,18 +1,18 @@
 import { GearSixIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { Button } from "react-aria-components";
-import { Bookmarks } from "../components/bookmark/Bookmarks";
-import { Clock } from "../components/clock/Clock";
-import { DragOverlay } from "../components/common/DragOverlay";
-import { ErrorBoundary } from "../components/common/ErrorBoundary";
-import { SearchBar } from "../components/search/SearchBar";
-import { Shortcuts } from "../components/search/Shortcuts";
-import { SettingsDialog } from "../components/settings/SettingsDialog";
-import { WaterTracker } from "../components/water/WaterTracker";
-import { WeatherWidget } from "../components/weather/WeatherWidget";
-import { toaster } from "../utils/toast";
-import styles from "./App.module.css";
-import { useWallpaperContext } from "./providers/WallpaperContext";
+import { Bookmarks } from "../components/bookmark/bookmarks";
+import { Clock } from "../components/clock/clock";
+import { DragOverlay } from "../components/common/drag-overlay";
+import { ErrorBoundary } from "../components/common/error-boundary";
+import { SearchBar } from "../components/search/search-bar";
+import { Shortcuts } from "../components/search/shortcuts";
+import { SettingsDialog } from "../components/settings/settings-dialog";
+import { toaster } from "../components/toast/toast";
+import { WaterTracker } from "../components/water/water-tracker";
+import { WeatherWidget } from "../components/weather/weather-widget";
+import styles from "./app.module.css";
+import { useWallpaperContext } from "./providers/wallpaper-context";
 
 function ErrorFallback() {
 	return (

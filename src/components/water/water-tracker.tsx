@@ -12,14 +12,19 @@ import {
 	useSetTodayCupCountMutation,
 	useWaterToday,
 	useWaterWeek,
-} from "../../queries/water-query";
-import { toaster } from "../../utils/toast";
-import styles from "./WaterTracker.module.css";
+} from "../../hooks/use-water";
+import { toaster } from "../toast/toast";
+import styles from "./water-tracker.module.css";
 
-interface WeeklyWaterChartProps {
-	consumedByDay: Array<{ label: string; consumedLiters: number }>;
+type ConsumedByDay = {
+	label: string;
+	consumedLiters: number;
+};
+
+type WeeklyWaterChartProps = {
+	consumedByDay: ConsumedByDay[];
 	goalLiters: number;
-}
+};
 
 function WeeklyWaterChart({
 	consumedByDay,

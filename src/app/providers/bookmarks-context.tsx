@@ -1,13 +1,13 @@
 import { createContext, useContext, useMemo } from "react";
-import { useBookmarks } from "../../hooks/useBookmarks";
+import { useBookmarks } from "../../hooks/use-bookmarks";
 import type { Bookmark } from "../../types/bookmark";
 
-interface BookmarksContextValue {
+type BookmarksContextValue = {
 	bookmarks: Bookmark[];
 	loading: boolean;
 	errorMessage: string | null;
 	refresh: () => Promise<void>;
-}
+};
 
 const BookmarksContext = createContext<BookmarksContextValue | null>(null);
 

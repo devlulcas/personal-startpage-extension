@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { queryKeys } from "../queries/queryKeys";
+import { queryKeys } from "../queries/query-keys";
 import { resolveResult } from "../queries/result-adapter";
 import {
 	loadWallpaper,

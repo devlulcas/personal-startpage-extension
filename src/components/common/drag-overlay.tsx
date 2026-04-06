@@ -1,9 +1,9 @@
 import { UploadSimpleIcon } from "@phosphor-icons/react";
-import styles from "./DragOverlay.module.css";
+import styles from "./drag-overlay.module.css";
 
-interface DragOverlayProps {
+type DragOverlayProps = {
 	active: boolean;
-}
+};
 
 export function DragOverlay({ active }: DragOverlayProps) {
 	if (!active) {

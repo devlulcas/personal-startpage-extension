@@ -1,6 +1,6 @@
-interface WallpaperSettings {
+type WallpaperSettings = {
 	blur: number;
-}
+};
 
 const STORAGE_KEY = "wallpaper_settings";
 

@@ -7,25 +7,25 @@ import {
 } from "../config/water";
 import { err, ok, type Result } from "../types/result";
 
-interface WeeklyWaterDay {
+type WeeklyWaterDay = {
 	dateKey: string;
 	label: string;
 	consumedLiters: number;
-}
+};
 
-interface WeeklyWaterData {
+type WeeklyWaterData = {
 	days: WeeklyWaterDay[];
 	goalLiters: number;
-}
+};
 
-interface TodayWaterData {
+type TodayWaterData = {
 	dateKey: string;
 	consumedLiters: number;
 	goalLiters: number;
 	cupSizeMl: number;
 	totalCups: number;
 	consumedCups: number;
-}
+};
 
 function toDateKey(date: Date): string {
 	const year = date.getFullYear();

@@ -2,10 +2,10 @@ import { createContext, useContext, useMemo, useState } from "react";
 import type { LocationConfig } from "../../config/location";
 import { readStoredLocation } from "../../services/location-service";
 
-interface LocationContextValue {
+type LocationContextValue = {
 	location: LocationConfig | null;
 	setLocation: (location: LocationConfig | null) => void;
-}
+};
 
 const LocationContext = createContext<LocationContextValue | null>(null);
 

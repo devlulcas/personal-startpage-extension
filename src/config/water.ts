@@ -1,7 +1,7 @@
-export interface WaterSettings {
+export type WaterSettings = {
 	dailyGoalLiters: number;
 	cupSizeMl: number;
-}
+};
 
 type WaterHistory = Record<string, number>;
 

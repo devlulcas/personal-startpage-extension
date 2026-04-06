@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { useBookmarksContext } from "../../app/providers/BookmarksContext";
+import { useBookmarksContext } from "../../app/providers/bookmarks-context";
 import { deleteBookmarkByUrl } from "../../services/bookmarks-service";
 import type { Bookmark } from "../../types/bookmark";
-import { toaster } from "../../utils/toast";
-import { BookmarkItem } from "./BookmarkItem";
-import styles from "./Bookmarks.module.css";
+import { toaster } from "../toast/toast";
+import { BookmarkItem } from "./bookmark-item";
+import styles from "./bookmarks.module.css";
 
 export function Bookmarks() {
 	const { bookmarks, loading, errorMessage, refresh } = useBookmarksContext();

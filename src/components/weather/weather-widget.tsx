@@ -10,17 +10,17 @@ import {
 	SunIcon,
 } from "@phosphor-icons/react";
 import { useEffect } from "react";
-import { useWeatherContext } from "../../app/providers/WeatherContext";
+import { useWeatherContext } from "../../app/providers/weather-context";
 import {
 	getWeatherIconName,
 	type WeatherIconName,
 } from "../../services/weather-icons";
-import { toaster } from "../../utils/toast";
-import styles from "./WeatherWidget.module.css";
+import { toaster } from "../toast/toast";
+import styles from "./weather-widget.module.css";
 
-interface WeatherWidgetProps {
+type WeatherWidgetProps = {
 	onOpenSettings: () => void;
-}
+};
 
 export function WeatherWidget({ onOpenSettings }: WeatherWidgetProps) {
 	const { weather, loading, errorMessage } = useWeatherContext();

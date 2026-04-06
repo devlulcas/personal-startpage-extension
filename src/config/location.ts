@@ -1,9 +1,9 @@
-export interface LocationConfig {
+export type LocationConfig = {
 	city: string;
 	latitude: number;
 	longitude: number;
 	country: string;
-}
+};
 
 const STORAGE_KEY = "weather_location";
 
