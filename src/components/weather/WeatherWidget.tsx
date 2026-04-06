@@ -47,7 +47,7 @@ export function WeatherWidget({ onOpenSettings }: WeatherWidgetProps) {
 					{loading
 						? "Loading..."
 						: weather
-							? `${weather.temperature}${weather.units === "metric" ? "°C" : "°F"}`
+							? `${weather.temperature}°C`
 							: "--°"}
 				</span>
 				<span className={styles.location}>

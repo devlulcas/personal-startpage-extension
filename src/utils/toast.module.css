@@ -16,8 +16,7 @@
 	backdrop-filter: blur(12px);
 	box-shadow:
 		0 8px 24px color-mix(in oklch, var(--shadow) 58%, transparent),
-		0 0 0 1px color-mix(in oklch, var(--outline-variant) 22%, transparent)
-			inset;
+		0 0 0 1px color-mix(in oklch, var(--outline-variant) 22%, transparent) inset;
 	transition:
 		transform var(--duration-medium) var(--ease-standard),
 		opacity var(--duration-medium) var(--ease-standard);

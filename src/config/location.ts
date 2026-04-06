@@ -3,7 +3,6 @@ export interface LocationConfig {
 	latitude: number;
 	longitude: number;
 	country: string;
-	units: "metric" | "imperial";
 }
 
 const STORAGE_KEY = "weather_location";

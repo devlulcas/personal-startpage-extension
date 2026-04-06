@@ -10,7 +10,6 @@ export interface WeatherData {
 	description: string;
 	icon: string;
 	location: string;
-	units: "metric" | "imperial";
 }
 
 interface OpenWeatherResponse {
@@ -51,7 +50,7 @@ interface CacheEntry {
 }
 
 function makeLocationCacheKey(location: LocationConfig): string {
-	return `${location.latitude}:${location.longitude}:${location.units}`;
+	return `${location.latitude}:${location.longitude}`;
 }
 
 function getCache(): CacheEntry | null {
@@ -88,7 +87,7 @@ async function fetchWithRotation<T>(
 	if (keys.length === 0) {
 		return err(
 			"no_api_key",
-			"No weather API key configured. Set VITE_WEATHER_API_KEY_1.",
+			"No weather API key configured. Add a key in Settings > API Keys.",
 		);
 	}
 
@@ -98,7 +97,10 @@ async function fetchWithRotation<T>(
 	while (attempts < keys.length) {
 		const apiKey = apiKeyRotator.getCurrentKey();
 		if (!apiKey) {
-			return err("no_api_key", "No weather API key configured.");
+			return err(
+				"no_api_key",
+				"No weather API key configured. Add a key in Settings > API Keys.",
+			);
 		}
 
 		const requestParams = new URLSearchParams(params);
@@ -175,7 +177,7 @@ export async function getWeather(
 	const params = new URLSearchParams({
 		lat: String(location.latitude),
 		lon: String(location.longitude),
-		units: location.units,
+		units: "metric",
 	});
 
 	const response = await fetchWithRotation<OpenWeatherResponse>(
@@ -200,7 +202,6 @@ export async function getWeather(
 		description: weather.weather[0]?.description ?? "Unknown",
 		icon: weather.weather[0]?.icon ?? "01d",
 		location: weather.name,
-		units: location.units,
 	};
 
 	setCache(normalized, cacheKey);

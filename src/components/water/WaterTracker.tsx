@@ -184,9 +184,17 @@ export function WaterTracker() {
 							aria-pressed={isConsumed}
 						>
 							{isConsumed ? (
-								<DropSimpleIcon size={16} weight="fill" className={styles.cupIcon} />
+								<DropSimpleIcon
+									size={16}
+									weight="fill"
+									className={styles.cupIcon}
+								/>
 							) : (
-								<DropIcon size={16} weight="regular" className={styles.cupIcon} />
+								<DropIcon
+									size={16}
+									weight="regular"
+									className={styles.cupIcon}
+								/>
 							)}
 						</Button>
 					);

@@ -1,7 +1,7 @@
 import type { LocationConfig } from "../config/location";
 
 function toLocationKey(location: LocationConfig): string {
-	return `${location.latitude}:${location.longitude}:${location.units}`;
+	return `${location.latitude}:${location.longitude}`;
 }
 
 function toDateKey(date: Date): string {
