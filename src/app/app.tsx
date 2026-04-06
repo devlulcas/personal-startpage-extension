@@ -55,6 +55,14 @@ export function App() {
 
 			<div className={styles.topLeftWidget}>
 				<WaterTracker />
+				<button
+					type="button"
+					onClick={() => {
+						toaster.success("Test");
+					}}
+				>
+					Test
+				</button>
 			</div>
 
 			<main className={styles.main}>

@@ -23,6 +23,25 @@ type AppToastContent = {
 
 const toastQueue = new ToastQueue<AppToastContent>();
 const activeToastKeys = new Set<string>();
+const toastTimers = new Map<string, ReturnType<typeof setTimeout>>();
+type ViewTransitionDocument = Document & {
+	startViewTransition?: (update: () => void) => void;
+};
+
+function runWithViewTransition(update: () => void) {
+	if (typeof document === "undefined") {
+		update();
+		return;
+	}
+
+	const viewTransitionDocument = document as ViewTransitionDocument;
+	if (!viewTransitionDocument.startViewTransition) {
+		update();
+		return;
+	}
+
+	viewTransitionDocument.startViewTransition(update);
+}
 
 function ToastIcon({ variant }: Pick<AppToastContent, "variant">) {
 	const icon =
@@ -40,19 +59,45 @@ function ToastIcon({ variant }: Pick<AppToastContent, "variant">) {
 }
 
 function showToast(message: string, variant: ToastVariant) {
-	const toastKey = toastQueue.add(
-		{
-			message,
-			variant,
-		},
-		{
-			timeout: variant === "error" ? 5000 : 5200,
-			onClose: () => {
-				activeToastKeys.delete(toastKey);
+	let toastKey = "";
+	const timeout = variant === "error" ? 5000 : 5200;
+	runWithViewTransition(() => {
+		toastKey = toastQueue.add(
+			{
+				message,
+				variant,
 			},
-		},
-	);
-	activeToastKeys.add(toastKey);
+			{
+				onClose: () => {
+					activeToastKeys.delete(toastKey);
+					const timer = toastTimers.get(toastKey);
+					if (timer) {
+						clearTimeout(timer);
+						toastTimers.delete(toastKey);
+					}
+				},
+			},
+		);
+		activeToastKeys.add(toastKey);
+	});
+
+	const timer = setTimeout(() => {
+		closeToast(toastKey);
+	}, timeout);
+	toastTimers.set(toastKey, timer);
+}
+
+function closeToast(toastKey: string) {
+	const timer = toastTimers.get(toastKey);
+	if (timer) {
+		clearTimeout(timer);
+		toastTimers.delete(toastKey);
+	}
+
+	runWithViewTransition(() => {
+		toastQueue.close(toastKey);
+		activeToastKeys.delete(toastKey);
+	});
 }
 
 export const toaster = {
@@ -63,10 +108,17 @@ export const toaster = {
 		showToast(message, "error");
 	},
 	dismiss() {
-		for (const toastKey of activeToastKeys) {
-			toastQueue.close(toastKey);
-		}
-		activeToastKeys.clear();
+		runWithViewTransition(() => {
+			for (const toastKey of activeToastKeys) {
+				toastQueue.close(toastKey);
+				const timer = toastTimers.get(toastKey);
+				if (timer) {
+					clearTimeout(timer);
+					toastTimers.delete(toastKey);
+				}
+			}
+			activeToastKeys.clear();
+		});
 	},
 };
 
@@ -79,7 +131,11 @@ function AppToast(props: ToastProps<AppToastContent>) {
 
 export function AppToaster() {
 	return (
-		<ToastRegion queue={toastQueue} className={styles.container}>
+		<ToastRegion
+			queue={toastQueue}
+			className={styles.container}
+			style={{ viewTransitionName: "toast-region" }}
+		>
 			{({ toast }) => (
 				<AppToast toast={toast}>
 					<ToastContent className={styles.content}>
@@ -89,9 +145,11 @@ export function AppToaster() {
 						</Text>
 					</ToastContent>
 					<Button
-						slot="close"
 						aria-label="Close toast"
 						className={styles.closeButton}
+						onPress={() => {
+							closeToast(toast.key);
+						}}
 					>
 						<XIcon size={16} weight="bold" />
 					</Button>
