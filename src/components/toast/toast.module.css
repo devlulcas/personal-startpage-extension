@@ -1,12 +1,17 @@
 .container {
+	position: fixed;
 	inset-inline-end: var(--space-4);
 	inset-block-end: var(--space-4);
+	display: flex;
+	flex-direction: column-reverse;
+	gap: var(--space-2);
+	outline: none;
 }
 
 .toast {
 	display: flex;
 	align-items: center;
-	gap: var(--space-3);
+	gap: var(--space-2);
 	inline-size: min(340px, calc(100vw - var(--space-8)));
 	padding: var(--space-3) var(--space-4);
 	border-radius: var(--radius-md);
@@ -17,17 +22,23 @@
 	box-shadow:
 		0 8px 24px color-mix(in oklch, var(--shadow) 58%, transparent),
 		0 0 0 1px color-mix(in oklch, var(--outline-variant) 22%, transparent) inset;
-	transition:
-		transform var(--duration-medium) var(--ease-standard),
-		opacity var(--duration-medium) var(--ease-standard);
+	outline: none;
 }
 
-.successToast {
+.success {
 	border-color: color-mix(in oklch, var(--primary) 40%, var(--outline-variant));
 }
 
-.errorToast {
+.error {
 	border-color: color-mix(in oklch, var(--error) 48%, var(--outline-variant));
+}
+
+.content {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	flex: 1 1 auto;
+	min-inline-size: 0;
 }
 
 .icon {
@@ -35,27 +46,18 @@
 	flex-shrink: 0;
 }
 
-.successToast .icon {
+.success .icon {
 	color: var(--primary);
 }
 
-.errorToast .icon {
+.error .icon {
 	color: var(--error);
 }
 
 .message {
 	font-size: var(--text-sm);
 	line-height: 1.35;
-}
-
-.visible {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-.hidden {
-	opacity: 0;
-	transform: translateY(8px);
+	color: var(--on-surface);
 }
 
 @media (max-width: 640px) {
@@ -68,4 +70,33 @@
 	.toast {
 		inline-size: 100%;
 	}
+}
+
+.closeButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: 1.9rem;
+	block-size: 1.9rem;
+	flex-shrink: 0;
+	border: none;
+	border-radius: var(--radius-sm);
+	background: transparent;
+	color: var(--on-surface-variant);
+	cursor: pointer;
+	outline: none;
+}
+
+.closeButton[data-hovered] {
+	background: color-mix(in oklch, var(--surface-4) 65%, transparent);
+	color: var(--on-surface);
+}
+
+.closeButton[data-pressed] {
+	background: color-mix(in oklch, var(--surface-4) 85%, transparent);
+}
+
+.closeButton[data-focus-visible] {
+	outline: 2px solid color-mix(in oklch, var(--primary) 72%, white);
+	outline-offset: 2px;
 }

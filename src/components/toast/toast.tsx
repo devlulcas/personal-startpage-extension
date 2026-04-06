@@ -1,18 +1,30 @@
-import { CheckCircleIcon, WarningCircleIcon } from "@phosphor-icons/react";
-import { Toaster, toast } from "react-hot-toast";
+import {
+	CheckCircleIcon,
+	WarningCircleIcon,
+	XIcon,
+} from "@phosphor-icons/react";
+import {
+	Button,
+	Text,
+	UNSTABLE_Toast as Toast,
+	UNSTABLE_ToastContent as ToastContent,
+	UNSTABLE_ToastQueue as ToastQueue,
+	UNSTABLE_ToastRegion as ToastRegion,
+	type ToastProps,
+} from "react-aria-components";
 import styles from "./toast.module.css";
 
 type ToastVariant = "success" | "error";
 
-type ToastContentProps = {
+type AppToastContent = {
 	message: string;
 	variant: ToastVariant;
-	visible: boolean;
 };
 
-function ToastContent({ message, variant, visible }: ToastContentProps) {
-	const variantClass =
-		variant === "success" ? styles.successToast : styles.errorToast;
+const toastQueue = new ToastQueue<AppToastContent>();
+const activeToastKeys = new Set<string>();
+
+function ToastIcon({ variant }: Pick<AppToastContent, "variant">) {
 	const icon =
 		variant === "success" ? (
 			<CheckCircleIcon size={20} weight="duotone" />
@@ -21,29 +33,26 @@ function ToastContent({ message, variant, visible }: ToastContentProps) {
 		);
 
 	return (
-		<div
-			className={`${styles.toast} ${variantClass} ${visible ? styles.visible : styles.hidden}`}
-			role="status"
-		>
-			<span className={styles.icon} aria-hidden="true">
-				{icon}
-			</span>
-			<span className={styles.message}>{message}</span>
-		</div>
+		<span className={styles.icon} aria-hidden="true">
+			{icon}
+		</span>
 	);
 }
 
 function showToast(message: string, variant: ToastVariant) {
-	toast.custom(
-		(toastContext) => (
-			<ToastContent
-				message={message}
-				variant={variant}
-				visible={toastContext.visible}
-			/>
-		),
-		{ duration: variant === "error" ? 4200 : 3200 },
+	const toastKey = toastQueue.add(
+		{
+			message,
+			variant,
+		},
+		{
+			timeout: variant === "error" ? 5000 : 5200,
+			onClose: () => {
+				activeToastKeys.delete(toastKey);
+			},
+		},
 	);
+	activeToastKeys.add(toastKey);
 }
 
 export const toaster = {
@@ -54,23 +63,40 @@ export const toaster = {
 		showToast(message, "error");
 	},
 	dismiss() {
-		toast.dismiss();
+		for (const toastKey of activeToastKeys) {
+			toastQueue.close(toastKey);
+		}
+		activeToastKeys.clear();
 	},
 };
 
+function AppToast(props: ToastProps<AppToastContent>) {
+	const variantClass =
+		props.toast.content.variant === "success" ? styles.success : styles.error;
+
+	return <Toast {...props} className={`${styles.toast} ${variantClass}`} />;
+}
+
 export function AppToaster() {
 	return (
-		<Toaster
-			position="bottom-right"
-			gutter={10}
-			containerClassName={styles.container}
-			toastOptions={{
-				style: {
-					background: "transparent",
-					boxShadow: "none",
-					padding: 0,
-				},
-			}}
-		/>
+		<ToastRegion queue={toastQueue} className={styles.container}>
+			{({ toast }) => (
+				<AppToast toast={toast}>
+					<ToastContent className={styles.content}>
+						<ToastIcon variant={toast.content.variant} />
+						<Text slot="title" className={styles.message}>
+							{toast.content.message}
+						</Text>
+					</ToastContent>
+					<Button
+						slot="close"
+						aria-label="Close toast"
+						className={styles.closeButton}
+					>
+						<XIcon size={16} weight="bold" />
+					</Button>
+				</AppToast>
+			)}
+		</ToastRegion>
 	);
 }
