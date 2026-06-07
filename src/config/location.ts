@@ -21,3 +21,7 @@ export function getStoredLocation(): LocationConfig | null {
 export function saveLocation(location: LocationConfig): void {
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(location));
 }
+
+export function clearLocation(): void {
+	localStorage.removeItem(STORAGE_KEY);
+}

@@ -1,6 +1,12 @@
-import { XIcon } from "@phosphor-icons/react";
-import { useQuery } from "@tanstack/react-query";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { UploadSimpleIcon, XIcon } from "@phosphor-icons/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	type ChangeEvent,
+	type ReactNode,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import {
 	Button,
 	Dialog,
@@ -15,6 +21,7 @@ import {
 	Tabs,
 } from "react-aria-components";
 import { useAppearanceContext } from "../../app/providers/appearance-context";
+import { useFeatureSettingsContext } from "../../app/providers/feature-settings-context";
 import { useLocationContext } from "../../app/providers/location-context";
 import { useWallpaperContext } from "../../app/providers/wallpaper-context";
 import { useWeatherContext } from "../../app/providers/weather-context";
@@ -27,6 +34,10 @@ import {
 } from "../../hooks/use-water";
 import { queryKeys } from "../../queries/query-keys";
 import { resolveResult } from "../../queries/result-adapter";
+import {
+	buildConfigBackup,
+	importConfigBackup,
+} from "../../services/config-backup-service";
 import { persistLocation } from "../../services/location-service";
 import { geocodeCity } from "../../services/weather-service";
 import { Slider } from "../common/slider";
@@ -62,11 +73,14 @@ export function SettingsDialog({
 								</header>
 
 								<div className={styles.body}>
-									<Tabs className={styles.tabs} defaultSelectedKey="weather">
+									<Tabs className={styles.tabs} defaultSelectedKey="general">
 										<TabList
 											aria-label="Settings sections"
 											className={styles.tabList}
 										>
+											<Tab id="general" className={styles.tab}>
+												General
+											</Tab>
 											<Tab id="weather" className={styles.tab}>
 												Weather
 											</Tab>
@@ -81,6 +95,9 @@ export function SettingsDialog({
 											</Tab>
 										</TabList>
 										<TabPanels className={styles.tabPanels}>
+											<TabPanel id="general" className={styles.tabPanel}>
+												<GeneralSettingsSection />
+											</TabPanel>
 											<TabPanel id="weather" className={styles.tabPanel}>
 												<WeatherSettingsSection close={close} />
 											</TabPanel>
@@ -109,6 +126,27 @@ export function SettingsDialog({
 			</ModalOverlay>
 		</DialogTrigger>
 	);
+}
+
+function downloadJson(filename: string, data: unknown): void {
+	const blob = new Blob([JSON.stringify(data, null, 2)], {
+		type: "application/json",
+	});
+	const url = URL.createObjectURL(blob);
+	const anchor = document.createElement("a");
+	anchor.href = url;
+	anchor.download = filename;
+	anchor.click();
+	URL.revokeObjectURL(url);
+}
+
+function readFileAsText(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => resolve(String(reader.result));
+		reader.onerror = () => reject(reader.error);
+		reader.readAsText(file);
+	});
 }
 
 type WeatherSettingsSectionProps = {
@@ -163,6 +201,141 @@ function SettingsErrorMessage({ message }: SettingsErrorMessageProps) {
 		<div role="alert" aria-live="polite" className={styles.errorMessage}>
 			{message}
 		</div>
+	);
+}
+
+function GeneralSettingsSection() {
+	const queryClient = useQueryClient();
+	const { features, replaceFeatures, setFeatureEnabled } =
+		useFeatureSettingsContext();
+	const { setLocation } = useLocationContext();
+	const { setBlur } = useAppearanceContext();
+	const { refresh } = useWeatherContext();
+
+	async function handleExportConfig() {
+		const backupResult = await buildConfigBackup();
+		if (!backupResult.ok) {
+			toaster.error(backupResult.message);
+			return;
+		}
+
+		downloadJson("startpage-config.json", backupResult.data);
+		toaster.success("Config exported.");
+	}
+
+	async function handleImportConfig(event: ChangeEvent<HTMLInputElement>) {
+		const file = event.currentTarget.files?.[0];
+		event.currentTarget.value = "";
+		if (!file) {
+			return;
+		}
+
+		try {
+			const text = await readFileAsText(file);
+			const payload = JSON.parse(text) as unknown;
+			const importResult = await importConfigBackup(payload);
+			if (!importResult.ok) {
+				toaster.error(importResult.message);
+				return;
+			}
+
+			const config = importResult.data;
+			replaceFeatures(config.features);
+			setLocation(config.weatherLocation);
+			setBlur(config.wallpaperSettings.blur);
+			if (config.wallpaperIncluded) {
+				queryClient.setQueryData(queryKeys.wallpaper(), {
+					imageUrl: config.wallpaperImage,
+					palette: config.colorPalette,
+				});
+			}
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: queryKeys.waterSettings() }),
+				queryClient.invalidateQueries({ queryKey: ["water"] }),
+				queryClient.invalidateQueries({ queryKey: queryKeys.wallpaper() }),
+			]);
+			await refresh(true, config.weatherLocation ?? undefined);
+			toaster.success("Config imported.");
+		} catch (error) {
+			const message =
+				error instanceof SyntaxError
+					? "Config file must be valid JSON."
+					: error instanceof Error
+						? error.message
+						: "Failed to import config.";
+			toaster.error(message);
+		}
+	}
+
+	return (
+		<SettingsSection
+			title="General"
+			description="Choose which widgets are visible and manage your startpage backup."
+		>
+			<div className={styles.toggleList}>
+				<FeatureToggle
+					label="Water"
+					checked={features.water}
+					onChange={(checked) => setFeatureEnabled("water", checked)}
+				/>
+				<FeatureToggle
+					label="Clock"
+					checked={features.clock}
+					onChange={(checked) => setFeatureEnabled("clock", checked)}
+				/>
+				<FeatureToggle
+					label="Weather"
+					checked={features.weather}
+					onChange={(checked) => setFeatureEnabled("weather", checked)}
+				/>
+				<FeatureToggle
+					label="Export Wallpaper"
+					checked={features.includeWallpaperInExport}
+					onChange={(checked) =>
+						setFeatureEnabled("includeWallpaperInExport", checked)
+					}
+				/>
+			</div>
+
+			<div className={styles.backupActions}>
+				<button
+					type="button"
+					className={styles.outlinedButton}
+					onClick={handleExportConfig}
+				>
+					Export Config
+				</button>
+
+				<label className={styles.importButton}>
+					<UploadSimpleIcon size={16} weight="bold" />
+					Import Config
+					<input
+						type="file"
+						accept="application/json,.json"
+						onChange={handleImportConfig}
+					/>
+				</label>
+			</div>
+		</SettingsSection>
+	);
+}
+
+type FeatureToggleProps = {
+	label: string;
+	checked: boolean;
+	onChange: (checked: boolean) => void;
+};
+
+function FeatureToggle({ label, checked, onChange }: FeatureToggleProps) {
+	return (
+		<label className={styles.switchRow}>
+			<span>{label}</span>
+			<input
+				type="checkbox"
+				checked={checked}
+				onChange={(event) => onChange(event.currentTarget.checked)}
+			/>
+		</label>
 	);
 }
 

@@ -5,7 +5,7 @@ import styles from "./wallpaper.module.css";
 export function Wallpaper({ children }: { children: React.ReactNode }) {
 	const { isDraggingFile, wallpaperImage } = useWallpaperContext();
 
-  return (
+	return (
 		<>
 			{wallpaperImage && (
 				<img
@@ -16,7 +16,7 @@ export function Wallpaper({ children }: { children: React.ReactNode }) {
 			)}
 			<div className={styles.backgroundBlur} />
 
-      {children}
+			{children}
 
 			<DragOverlay active={isDraggingFile} />
 		</>

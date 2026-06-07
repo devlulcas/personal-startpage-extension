@@ -1,4 +1,4 @@
-type WallpaperSettings = {
+export type WallpaperSettings = {
 	blur: number;
 };
 

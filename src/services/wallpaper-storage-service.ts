@@ -14,6 +14,8 @@ type WallpaperLoadResult = {
 	palette: Record<string, string> | null;
 };
 
+export type StoredWallpaperBackup = WallpaperLoadResult;
+
 async function openDB(): Promise<IDBDatabase> {
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, 1);
@@ -123,5 +125,37 @@ export async function resetWallpaper(): Promise<Result<null, "storage_error">> {
 		return ok(null);
 	} catch {
 		return err("storage_error", "Failed to reset wallpaper.");
+	}
+}
+
+export async function getStoredWallpaperBackup(): Promise<
+	Result<StoredWallpaperBackup, "storage_error">
+> {
+	return loadWallpaper();
+}
+
+export async function replaceStoredWallpaperBackup(
+	wallpaper: StoredWallpaperBackup,
+): Promise<Result<StoredWallpaperBackup, "storage_error">> {
+	try {
+		if (wallpaper.imageUrl) {
+			await putValue(WALLPAPER_RECORD_KEY, wallpaper.imageUrl);
+		} else {
+			await clearStore();
+		}
+
+		if (wallpaper.palette) {
+			localStorage.setItem(
+				COLOR_PALETTE_KEY,
+				JSON.stringify(wallpaper.palette),
+			);
+			applyColorPalette(wallpaper.palette);
+		} else {
+			localStorage.removeItem(COLOR_PALETTE_KEY);
+		}
+
+		return ok(wallpaper);
+	} catch {
+		return err("storage_error", "Failed to import wallpaper.");
 	}
 }

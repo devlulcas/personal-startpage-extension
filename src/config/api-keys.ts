@@ -4,6 +4,11 @@ type ApiKeysConfig = {
 	keysInputValue: string;
 };
 
+export type WeatherApiKeysBackup = {
+	keysInputValue: string;
+	currentIndex: number;
+};
+
 class ApiKeyRotator {
 	private config: ApiKeysConfig;
 	private static readonly API_KEYS_STORAGE_KEY = "weather_api_keys";
@@ -55,6 +60,34 @@ class ApiKeyRotator {
 			ApiKeyRotator.API_KEY_INDEX_STORAGE_KEY,
 			currentIndex.toString(),
 		);
+	}
+
+	replaceFromBackup(backup: WeatherApiKeysBackup): void {
+		const keysInputValue = backup.keysInputValue.trim();
+		const keys = this.parseKeysInput(keysInputValue);
+		const currentIndex =
+			keys.length > 0
+				? Math.min(Math.max(backup.currentIndex, 0), keys.length - 1)
+				: 0;
+
+		this.config = {
+			keys,
+			currentIndex,
+			keysInputValue,
+		};
+
+		localStorage.setItem(ApiKeyRotator.API_KEYS_STORAGE_KEY, keysInputValue);
+		localStorage.setItem(
+			ApiKeyRotator.API_KEY_INDEX_STORAGE_KEY,
+			currentIndex.toString(),
+		);
+	}
+
+	getBackup(): WeatherApiKeysBackup {
+		return {
+			keysInputValue: this.config.keysInputValue,
+			currentIndex: this.config.currentIndex,
+		};
 	}
 
 	getKeysInputValue(): string {

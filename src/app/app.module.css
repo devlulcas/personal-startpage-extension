@@ -44,7 +44,7 @@
 	padding: var(--space-4);
 }
 
-.footer > :first-child {
+.clockSlot {
 	margin-inline-end: auto;
 }
 

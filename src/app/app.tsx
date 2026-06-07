@@ -12,6 +12,7 @@ import { WaterTracker } from "../components/water/water-tracker";
 import { WeatherWidget } from "../components/weather/weather-widget";
 import { useUnhandledRejectionHandler } from "../hooks/use-unhandled-rejection-handler";
 import styles from "./app.module.css";
+import { useFeatureSettingsContext } from "./providers/feature-settings-context";
 
 function ErrorFallback() {
 	return (
@@ -23,15 +24,18 @@ function ErrorFallback() {
 
 export function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	const { features } = useFeatureSettingsContext();
 
 	useUnhandledRejectionHandler();
 
 	return (
 		<ErrorBoundary fallback={<ErrorFallback />}>
 			<Wallpaper>
-				<div className={styles.topLeftWidget}>
-					<WaterTracker />
-				</div>
+				{features.water && (
+					<div className={styles.topLeftWidget}>
+						<WaterTracker />
+					</div>
+				)}
 
 				<main className={styles.main}>
 					<div className={styles.contentWrapper}>
@@ -47,9 +51,15 @@ export function App() {
 				</main>
 
 				<footer className={styles.footer}>
-					<Clock />
+					{features.clock && (
+						<div className={styles.clockSlot}>
+							<Clock />
+						</div>
+					)}
 
-					<WeatherWidget onOpenSettings={() => setSettingsOpen(true)} />
+					{features.weather && (
+						<WeatherWidget onOpenSettings={() => setSettingsOpen(true)} />
+					)}
 
 					<SettingsDialog isOpen={settingsOpen} onOpenChange={setSettingsOpen}>
 						<Button

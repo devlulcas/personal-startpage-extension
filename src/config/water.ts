@@ -3,7 +3,7 @@ export type WaterSettings = {
 	cupSizeMl: number;
 };
 
-type WaterHistory = Record<string, number>;
+export type WaterHistory = Record<string, number>;
 
 const WATER_SETTINGS_KEY = "water_settings";
 const WATER_HISTORY_KEY = "water_history";
