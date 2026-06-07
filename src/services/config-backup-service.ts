@@ -12,6 +12,12 @@ import {
 	saveLocation,
 } from "../config/location";
 import {
+	getShortcuts,
+	normalizeShortcuts,
+	type ShortcutConfig,
+	saveShortcuts,
+} from "../config/shortcuts";
+import {
 	getWallpaperSettings,
 	saveWallpaperSettings,
 	type WallpaperSettings,
@@ -36,6 +42,7 @@ export type AppConfigBackup = {
 	version: 1;
 	exportedAt: string;
 	features: FeatureSettings;
+	shortcuts: ShortcutConfig[];
 	weatherLocation: LocationConfig | null;
 	waterSettings: WaterSettings;
 	waterHistory: WaterHistory;
@@ -182,6 +189,7 @@ function parseBackup(
 					? input.exportedAt
 					: new Date().toISOString(),
 			features: normalizeFeatureSettings(input.features),
+			shortcuts: normalizeShortcuts(input.shortcuts),
 			weatherLocation: readLocation(input.weatherLocation),
 			waterSettings: readWaterSettings(input.waterSettings),
 			waterHistory: readWaterHistory(input.waterHistory),
@@ -213,6 +221,7 @@ export async function buildConfigBackup(): Promise<
 		version: CONFIG_VERSION,
 		exportedAt: new Date().toISOString(),
 		features,
+		shortcuts: getShortcuts(),
 		weatherLocation: getStoredLocation(),
 		waterSettings: getWaterSettings(),
 		waterHistory: getWaterHistory(),
@@ -236,6 +245,7 @@ export async function importConfigBackup(
 
 	try {
 		saveFeatureSettings(config.features);
+		saveShortcuts(config.shortcuts);
 		if (config.weatherLocation) {
 			saveLocation(config.weatherLocation);
 		} else {

@@ -11,8 +11,14 @@
 	gap: var(--space-2);
 	padding: var(--space-2) var(--space-4);
 	border-radius: var(--radius-md);
-	background: var(--surface-1);
-	color: var(--on-surface);
+	background: color-mix(in srgb, var(--shortcut-color) 72%, transparent);
+	color: color-mix(
+		in srgb,
+		var(--shortcut-color) 20%,
+		/* biome-ignore lint/correctness/noUnknownFunction: contrast-color is intentional for user-selected shortcut colors. */
+		contrast-color(var(--shortcut-color))
+	);
 	text-decoration: none;
 	font-size: var(--text-sm);
+	font-weight: 600;
 }
