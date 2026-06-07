@@ -9,26 +9,44 @@
 	display: flex;
 	align-items: center;
 	gap: var(--space-3);
-	border: none;
+	border: 1px solid var(--soft-border);
 	border-radius: var(--radius-pill);
-	background: transparent;
+	background: color-mix(in oklch, var(--soft-panel) 78%, transparent);
 	color: var(--on-surface);
-	padding: 0;
+	box-shadow: var(--shadow-soft);
+	padding: var(--space-2) var(--space-3);
 	cursor: pointer;
+	transition:
+		box-shadow var(--duration-medium) var(--ease-standard),
+		transform var(--duration-medium) var(--ease-standard);
+}
+
+.progressButton:hover {
+	box-shadow: var(--shadow-raised);
+}
+
+.progressButton:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }
 
 .progressTrack {
 	height: 8px;
 	flex: 1;
 	border-radius: var(--radius-pill);
-	background: var(--surface-3);
+	background: var(--soft-panel-recessed);
+	box-shadow: var(--shadow-inset);
 	overflow: hidden;
 }
 
 .progressFill {
 	height: 100%;
 	border-radius: var(--radius-pill);
-	background: var(--primary);
+	background: linear-gradient(
+		90deg,
+		color-mix(in oklch, var(--secondary) 72%, var(--soft-accent)),
+		var(--soft-accent)
+	);
 	transition: width 180ms ease;
 }
 
@@ -46,16 +64,32 @@
 
 .cupTick {
 	border: none;
-	background: transparent;
+	border-radius: var(--radius-pill);
+	background: color-mix(in oklch, var(--soft-panel) 54%, transparent);
 	padding: 2px;
 	min-width: auto;
 	min-height: auto;
 	cursor: pointer;
 	color: var(--on-surface-variant);
+	box-shadow: var(--shadow-soft);
+	transition:
+		color var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard),
+		transform var(--duration-medium) var(--ease-standard);
 }
 
 .cupTick[aria-pressed="true"] {
 	color: var(--primary);
+	background: color-mix(in oklch, var(--soft-accent-muted) 64%, transparent);
+}
+
+.cupTick:hover {
+	color: var(--on-surface);
+}
+
+.cupTick:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-focus);
 }
 
 .cupIcon {
@@ -68,17 +102,18 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: oklch(from var(--surface) calc(l + 0.1) c h / 0.7);
-	backdrop-filter: blur(8px);
+	background: color-mix(in oklch, var(--surface) 66%, transparent);
+	backdrop-filter: blur(12px) saturate(1.08);
 }
 
 .modal {
 	width: min(92vw, 680px);
 	max-height: min(88vh, 760px);
-	border: 1px solid var(--outline-variant);
+	border: 1px solid var(--soft-border);
 	border-radius: var(--radius-lg);
-	background: var(--surface);
+	background: var(--soft-panel);
 	color: var(--on-surface);
+	box-shadow: var(--shadow-floating);
 	overflow: hidden;
 }
 
@@ -101,12 +136,17 @@
 }
 
 .closeButton {
-	border: none;
+	border: 1px solid var(--soft-border);
 	border-radius: var(--radius-pill);
 	padding: var(--space-2) var(--space-4);
-	background: var(--surface-2);
+	background: var(--soft-panel-raised);
 	color: var(--on-surface);
+	box-shadow: var(--shadow-soft);
 	cursor: pointer;
+}
+
+.closeButton:hover {
+	box-shadow: var(--shadow-raised);
 }
 
 .dialogBody {
@@ -119,7 +159,7 @@
 }
 
 .chartBar {
-	fill: var(--secondary-container);
+	fill: color-mix(in oklch, var(--secondary-container) 78%, var(--soft-accent));
 }
 
 .goalLine {

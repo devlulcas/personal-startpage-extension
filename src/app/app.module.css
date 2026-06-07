@@ -52,17 +52,33 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	border: none;
-	background: transparent;
+	border: 1px solid var(--soft-border);
+	background: var(--soft-panel);
 	color: var(--on-surface);
 	width: 40px;
 	height: 40px;
 	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-soft);
 	cursor: pointer;
+	transition:
+		background var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard),
+		transform var(--duration-medium) var(--ease-standard);
 }
 
 .settingsButton:hover {
-	background: var(--surface-3);
+	background: var(--soft-panel-raised);
+	box-shadow: var(--shadow-raised);
+}
+
+.settingsButton:active {
+	box-shadow: var(--shadow-pressed);
+}
+
+.settingsButton[data-focus-visible],
+.settingsButton:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }
 
 .errorFallback {
@@ -70,4 +86,20 @@
 	display: grid;
 	place-items: center;
 	color: var(--error);
+}
+
+@media (max-width: 640px) {
+	.main {
+		padding: var(--space-6) var(--space-4);
+	}
+
+	.footer {
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		padding: var(--space-3);
+	}
+
+	.clockSlot {
+		margin-inline-end: auto;
+	}
 }

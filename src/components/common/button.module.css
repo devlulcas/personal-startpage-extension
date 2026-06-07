@@ -1,0 +1,88 @@
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-2);
+	border: 1px solid transparent;
+	border-radius: var(--radius-pill);
+	box-shadow: var(--shadow-soft);
+	cursor: pointer;
+	font: inherit;
+	font-size: var(--text-sm);
+	padding: var(--space-3) var(--space-5);
+	text-decoration: none;
+	transition:
+		background var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard),
+		color var(--duration-medium) var(--ease-standard);
+}
+
+.button[data-hovered] {
+	box-shadow: var(--shadow-raised);
+}
+
+.button[data-pressed] {
+	box-shadow: var(--shadow-pressed);
+}
+
+.button[data-focus-visible] {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
+}
+
+.button[data-disabled] {
+	opacity: 0.38;
+	pointer-events: none;
+}
+
+.filled {
+	background: linear-gradient(
+		145deg,
+		color-mix(in oklch, var(--soft-accent) 86%, white),
+		color-mix(in oklch, var(--primary) 82%, var(--primary-container))
+	);
+	color: var(--on-primary);
+}
+
+.outlined {
+	border-color: color-mix(in oklch, var(--primary) 42%, var(--soft-border));
+	background: var(--soft-panel);
+	color: var(--primary);
+}
+
+.text {
+	background: color-mix(in oklch, var(--soft-panel) 70%, transparent);
+	color: var(--primary);
+}
+
+.iconButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: 36px;
+	block-size: 36px;
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+	background: color-mix(in oklch, var(--soft-panel) 68%, transparent);
+	color: var(--on-surface-variant);
+	box-shadow: var(--shadow-soft);
+	cursor: pointer;
+	transition:
+		color var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard),
+		background var(--duration-medium) var(--ease-standard);
+}
+
+.iconButton[data-hovered] {
+	color: var(--on-surface);
+	box-shadow: var(--shadow-raised);
+}
+
+.iconButton[data-pressed] {
+	box-shadow: var(--shadow-pressed);
+}
+
+.iconButton[data-focus-visible] {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
+}

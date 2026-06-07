@@ -51,9 +51,11 @@
 	inline-size: min(340px, calc(100vw - var(--space-8)));
 	padding: var(--space-3) var(--space-4);
 	border-radius: var(--radius-md);
-	border: 1px solid var(--outline-variant);
-	background: var(--surface-3);
+	border: 1px solid var(--soft-border);
+	background: color-mix(in oklch, var(--soft-panel-raised) 92%, transparent);
 	color: var(--on-surface);
+	box-shadow: var(--shadow-floating);
+	backdrop-filter: blur(10px);
 	outline: none;
 }
 
@@ -120,15 +122,17 @@
 }
 
 .closeButton[data-hovered] {
-	background: color-mix(in oklch, var(--surface-4) 65%, transparent);
+	background: color-mix(in oklch, var(--soft-panel-raised) 86%, transparent);
 	color: var(--on-surface);
+	box-shadow: var(--shadow-soft);
 }
 
 .closeButton[data-pressed] {
-	background: color-mix(in oklch, var(--surface-4) 85%, transparent);
+	background: color-mix(in oklch, var(--soft-panel-recessed) 85%, transparent);
+	box-shadow: var(--shadow-pressed);
 }
 
 .closeButton[data-focus-visible] {
-	outline: 2px solid color-mix(in oklch, var(--primary) 72%, white);
-	outline-offset: 2px;
+	outline: none;
+	box-shadow: var(--shadow-focus);
 }

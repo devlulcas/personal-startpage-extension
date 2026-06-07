@@ -12,7 +12,14 @@
 	position: fixed;
 	inset: 0;
 	backdrop-filter: blur(var(--wallpaper-blur, 0px));
-	background-color: oklch(from var(--surface) l c h / 0.6);
+	background:
+		linear-gradient(
+			135deg,
+			color-mix(in oklch, var(--primary-container) 6%, transparent),
+			color-mix(in oklch, var(--primary-container) 12%, transparent) 44%,
+			color-mix(in oklch, var(--tertiary-container) 8%, transparent)
+		),
+		oklch(from var(--surface) l c h / 0.54);
 	pointer-events: none;
 	z-index: -1;
 }

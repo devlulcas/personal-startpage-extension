@@ -6,19 +6,42 @@
 }
 
 .shortcutLink {
+	/* biome-ignore lint/correctness/noUnknownFunction: contrast-color is intentional for user-selected shortcut colors. */
+	--contrast-color: contrast-color(var(--shortcut-color));
+
 	display: inline-flex;
 	align-items: center;
 	gap: var(--space-2);
 	padding: var(--space-2) var(--space-4);
 	border-radius: var(--radius-md);
-	background: color-mix(in srgb, var(--shortcut-color) 72%, transparent);
-	color: color-mix(
-		in srgb,
-		var(--shortcut-color) 20%,
-		/* biome-ignore lint/correctness/noUnknownFunction: contrast-color is intentional for user-selected shortcut colors. */
-		contrast-color(var(--shortcut-color))
+	border: 1px solid
+		color-mix(in oklch, var(--shortcut-color) 84%, var(--primary-container));
+	background: linear-gradient(
+		145deg,
+		color-mix(in oklch, var(--shortcut-color) 52%, var(--soft-highlight)),
+		color-mix(in oklch, var(--shortcut-color) 94%, var(--soft-panel))
 	);
+	color: color-mix(in srgb, var(--shortcut-color) 42%, var(--contrast-color));
+	box-shadow: var(--shadow-soft);
 	text-decoration: none;
 	font-size: var(--text-sm);
 	font-weight: 600;
+	transition:
+		box-shadow var(--duration-medium) var(--ease-standard),
+		filter var(--duration-medium) var(--ease-standard),
+		transform var(--duration-medium) var(--ease-standard);
+}
+
+.shortcutLink:hover {
+	filter: brightness(1.03);
+	box-shadow: var(--shadow-raised);
+}
+
+.shortcutLink:active {
+	box-shadow: var(--shadow-pressed);
+}
+
+.shortcutLink:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }

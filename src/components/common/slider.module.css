@@ -36,7 +36,8 @@
 	height: 6px;
 	transform: translateY(-50%);
 	border-radius: var(--radius-pill);
-	background: var(--surface-2);
+	background: var(--soft-panel-recessed);
+	box-shadow: var(--shadow-inset);
 }
 
 .fill {
@@ -45,27 +46,33 @@
 	width: var(--size);
 	height: 100%;
 	border-radius: inherit;
-	background: var(--primary);
+	background: linear-gradient(
+		90deg,
+		color-mix(in oklch, var(--secondary) 70%, var(--soft-accent)),
+		var(--soft-accent)
+	);
 }
 
 .thumb {
 	width: 18px;
 	height: 18px;
 	top: 50%;
-	border: 2px solid var(--primary);
+	border: 2px solid color-mix(in oklch, var(--soft-accent) 84%, white);
 	border-radius: 50%;
-	background: var(--surface);
+	background: var(--soft-panel-raised);
+	box-shadow: var(--shadow-soft);
 	transform: translate(-50%, -50%);
 	cursor: pointer;
 }
 
 .thumb[data-focus-visible] {
-	outline: 2px solid var(--outline);
-	outline-offset: 2px;
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }
 
 .thumb[data-dragging] {
-	background: var(--primary-container);
+	background: var(--soft-accent-muted);
+	box-shadow: var(--shadow-pressed);
 }
 
 .slider[data-disabled] .trackBase {

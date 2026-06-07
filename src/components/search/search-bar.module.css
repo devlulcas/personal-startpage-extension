@@ -4,13 +4,25 @@
 	gap: var(--space-2);
 	padding: var(--space-2);
 	border-radius: var(--radius-pill);
-	background: var(--surface-2);
+	border: 1px solid var(--soft-border);
+	background: color-mix(in oklch, var(--surface) 72%, transparent);
+	backdrop-filter: blur(10px);
+	box-shadow: var(--shadow-inset);
 	width: min(100%, 560px);
+	transition:
+		background var(--duration-medium) var(--ease-standard),
+		border-color var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard);
 }
 
 .searchContainer:focus-within {
-	outline: 2px solid var(--primary);
-	background: var(--surface-3);
+	border-color: color-mix(in oklch, var(--primary) 56%, var(--soft-border));
+	background: color-mix(
+		in oklch,
+		var(--surface) 76%,
+		var(--primary-container) 24%
+	);
+	box-shadow: var(--shadow-inset), var(--shadow-focus);
 }
 
 .searchInput {
@@ -23,6 +35,10 @@
 	font-size: var(--text-lg);
 }
 
+.searchInput::placeholder {
+	color: color-mix(in oklch, var(--on-surface-variant) 78%, transparent);
+}
+
 .searchInput:focus {
 	outline: none;
 }
@@ -33,9 +49,37 @@
 	justify-content: center;
 	width: 52px;
 	height: 52px;
-	border: none;
+	border: 1px solid
+		color-mix(in oklch, var(--primary) 58%, var(--soft-highlight));
 	border-radius: var(--radius-pill);
-	background: var(--primary);
+	background: linear-gradient(
+		145deg,
+		color-mix(in oklch, var(--soft-accent) 86%, white),
+		color-mix(in oklch, var(--primary) 82%, var(--primary-container))
+	);
 	color: var(--on-primary);
+	box-shadow:
+		0 1px 0 color-mix(in oklch, var(--soft-highlight) 88%, transparent) inset,
+		var(--shadow-soft);
 	cursor: pointer;
+	transition:
+		box-shadow var(--duration-medium) var(--ease-standard),
+		filter var(--duration-medium) var(--ease-standard),
+		transform var(--duration-medium) var(--ease-standard);
+}
+
+.searchButton:hover {
+	filter: brightness(1.03);
+	box-shadow:
+		0 1px 0 color-mix(in oklch, var(--soft-highlight) 95%, transparent) inset,
+		var(--shadow-raised);
+}
+
+.searchButton:active {
+	box-shadow: var(--shadow-pressed);
+}
+
+.searchButton:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }

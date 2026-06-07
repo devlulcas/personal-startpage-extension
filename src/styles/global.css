@@ -3,8 +3,8 @@
 
 * {
 	box-sizing: border-box;
-	scrollbar-color: color-mix(in oklch, var(--primary) 58%, var(--surface-5))
-		color-mix(in oklch, var(--surface) 72%, transparent);
+	scrollbar-color: color-mix(in oklch, var(--soft-accent) 64%, var(--surface-5))
+		color-mix(in oklch, var(--soft-panel-recessed) 76%, transparent);
 	scrollbar-width: thin;
 }
 
@@ -14,7 +14,7 @@
 }
 
 *::-webkit-scrollbar-track {
-	background: color-mix(in oklch, var(--surface) 72%, transparent);
+	background: color-mix(in oklch, var(--soft-panel-recessed) 76%, transparent);
 	border-radius: var(--radius-pill);
 }
 
@@ -22,16 +22,16 @@
 	border: 2px solid transparent;
 	border-radius: var(--radius-pill);
 	background: linear-gradient(
-			color-mix(in oklch, var(--primary) 58%, var(--surface-5)),
-			color-mix(in oklch, var(--primary) 58%, var(--surface-5))
+			color-mix(in oklch, var(--soft-accent) 64%, var(--surface-5)),
+			color-mix(in oklch, var(--soft-accent) 64%, var(--surface-5))
 		)
 		padding-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
 	background: linear-gradient(
-			color-mix(in oklch, var(--primary) 72%, var(--surface-5)),
-			color-mix(in oklch, var(--primary) 72%, var(--surface-5))
+			color-mix(in oklch, var(--soft-accent) 78%, var(--surface-5)),
+			color-mix(in oklch, var(--soft-accent) 78%, var(--surface-5))
 		)
 		padding-box;
 }
@@ -50,4 +50,11 @@ body {
 button,
 input {
 	font: inherit;
+}
+
+button,
+a,
+input,
+select {
+	-webkit-tap-highlight-color: transparent;
 }
