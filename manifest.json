@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "StartPage",
-	"version": "1.0.0",
+	"version": "1.2.0",
 	"description": "A Simple New Tab (browser's home page)",
 	"permissions": ["search", "bookmarks", "favicon"],
 	"icons": {
