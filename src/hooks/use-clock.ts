@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const timeFormatter = new Intl.DateTimeFormat("en-GB", {
 	hour: "2-digit",
@@ -12,12 +12,21 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 	weekday: "long",
 });
 
+function getClockData() {
+	const now = new Date();
+
+	return {
+		time: timeFormatter.format(now),
+		date: dateFormatter.format(now),
+	};
+}
+
 export function useClock() {
-	const [now, setNow] = useState(() => new Date());
+	const [now, setNow] = useState(getClockData());
 
 	useEffect(() => {
 		const timer = window.setInterval(() => {
-			setNow(new Date());
+			setNow(getClockData());
 		}, 1000);
 
 		return () => {
@@ -25,11 +34,5 @@ export function useClock() {
 		};
 	}, []);
 
-	return useMemo(
-		() => ({
-			time: timeFormatter.format(now),
-			date: dateFormatter.format(now),
-		}),
-		[now],
-	);
+	return now;
 }

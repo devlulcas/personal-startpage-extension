@@ -1,4 +1,4 @@
-import { DropIcon, DropSimpleIcon } from "@phosphor-icons/react";
+import { DropSimpleIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 import {
 	Button,
@@ -188,19 +188,11 @@ export function WaterTracker() {
 							aria-label={`Set water to ${cupCount} cups`}
 							aria-pressed={isConsumed}
 						>
-							{isConsumed ? (
-								<DropSimpleIcon
-									size={16}
-									weight="fill"
-									className={styles.cupIcon}
-								/>
-							) : (
-								<DropIcon
-									size={16}
-									weight="regular"
-									className={styles.cupIcon}
-								/>
-							)}
+							<DropSimpleIcon
+								size={16}
+								weight={isConsumed ? "fill" : "duotone"}
+								className={styles.cupIcon}
+							/>
 						</Button>
 					);
 				})}

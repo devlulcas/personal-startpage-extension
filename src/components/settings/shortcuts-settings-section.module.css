@@ -1,0 +1,85 @@
+.shortcutList {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+.shortcutRow {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--space-3);
+	padding: var(--space-3);
+	border: 1px solid var(--soft-border);
+	border-radius: var(--radius-md);
+	background: var(--soft-panel);
+	box-shadow: var(--shadow-soft);
+}
+
+.shortcutSwatch {
+	inline-size: 32px;
+	block-size: 32px;
+	border-radius: var(--radius-md);
+	border: 1px solid
+		color-mix(in oklch, var(--shortcut-color) 34%, var(--soft-border));
+	background: color-mix(in srgb, var(--shortcut-color) 72%, transparent);
+	box-shadow: var(--shadow-inset);
+}
+
+.shortcutSummary {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	min-inline-size: 0;
+}
+
+.shortcutSummary span,
+.shortcutSummary a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.shortcutSummary a {
+	color: var(--on-surface-variant);
+	font-size: var(--text-sm);
+	text-decoration: none;
+}
+
+.shortcutActions {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	flex-wrap: wrap;
+}
+
+.shortcutForm {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	padding-block: var(--space-2);
+	margin-block-end: var(--space-4);
+}
+
+.shortcutForm h4 {
+	margin: 0;
+	font-size: var(--text-sm);
+	color: var(--on-surface);
+}
+
+.shortcutFormGrid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(120px, 0.45fr);
+	gap: var(--space-3);
+}
+
+.emptyMessage {
+	margin: 0;
+	padding: var(--space-4);
+	border: 1px solid var(--soft-border);
+	border-radius: var(--radius-md);
+	background: var(--soft-panel-recessed);
+	color: var(--on-surface-variant);
+	box-shadow: var(--shadow-inset);
+	font-size: var(--text-sm);
+}

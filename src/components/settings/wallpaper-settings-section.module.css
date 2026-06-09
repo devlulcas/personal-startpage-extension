@@ -1,0 +1,63 @@
+.wallpaperDropZone,
+.wallpaperDropZoneActive {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	min-block-size: 112px;
+	padding: var(--space-5);
+	border: 2px dashed color-mix(in oklch, var(--primary) 34%, var(--soft-border));
+	border-radius: var(--radius-md);
+	background: color-mix(in oklch, var(--soft-panel-recessed) 84%, transparent);
+	box-shadow: var(--shadow-inset);
+	color: var(--on-surface);
+	transition:
+		background var(--duration-medium) var(--ease-standard),
+		border-color var(--duration-medium) var(--ease-standard),
+		box-shadow var(--duration-medium) var(--ease-standard);
+}
+
+.wallpaperDropZoneActive {
+	border-color: color-mix(in oklch, var(--primary) 72%, var(--soft-highlight));
+	background: color-mix(
+		in oklch,
+		var(--primary-container) 46%,
+		var(--soft-panel)
+	);
+	box-shadow: var(--shadow-soft);
+}
+
+.wallpaperDropIcon {
+	flex: 0 0 auto;
+	color: var(--primary);
+}
+
+.wallpaperDropText {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	min-inline-size: 0;
+}
+
+.wallpaperDropText strong {
+	font-size: var(--text-base);
+}
+
+.wallpaperDropText span {
+	color: var(--on-surface-variant);
+	font-size: var(--text-sm);
+}
+
+.sliderField {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	padding: var(--space-4);
+	border: 1px solid var(--soft-border);
+	background: var(--soft-panel-recessed);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-inset);
+}
+
+.blurSlider {
+	margin-top: var(--space-1);
+}

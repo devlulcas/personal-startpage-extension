@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo } from "react";
 import { toaster } from "../../components/toast/toast";
-import { useWallpaperDrop } from "../../hooks/use-wallpaper-drop";
+import { useWallpaperPaste } from "../../hooks/use-wallpaper-drop";
 import { useWallpaperStorage } from "../../hooks/use-wallpaper-storage";
 
 type WallpaperContextValue = {
@@ -8,7 +8,6 @@ type WallpaperContextValue = {
 	loading: boolean;
 	setWallpaperFromFile: (file: File) => Promise<void>;
 	clearWallpaper: () => Promise<void>;
-	isDraggingFile: boolean;
 };
 
 const WallpaperContext = createContext<WallpaperContextValue | null>(null);
@@ -46,8 +45,8 @@ export function WallpaperProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [clearWallpaperStorage]);
 
-	const { isDraggingFile } = useWallpaperDrop({
-		onImageDropped: setWallpaperFromFile,
+	useWallpaperPaste({
+		onImagePasted: setWallpaperFromFile,
 	});
 
 	const value = useMemo<WallpaperContextValue>(
@@ -56,15 +55,8 @@ export function WallpaperProvider({ children }: { children: React.ReactNode }) {
 			loading,
 			setWallpaperFromFile,
 			clearWallpaper,
-			isDraggingFile,
 		}),
-		[
-			clearWallpaper,
-			isDraggingFile,
-			loading,
-			setWallpaperFromFile,
-			wallpaperImage,
-		],
+		[clearWallpaper, loading, setWallpaperFromFile, wallpaperImage],
 	);
 
 	return (

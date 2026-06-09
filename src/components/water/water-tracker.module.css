@@ -60,36 +60,36 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-1);
+	margin-inline: var(--space-3);
 }
 
 .cupTick {
 	border: none;
 	border-radius: var(--radius-pill);
-	background: color-mix(in oklch, var(--soft-panel) 54%, transparent);
 	padding: 2px;
 	min-width: auto;
 	min-height: auto;
 	cursor: pointer;
 	color: var(--on-surface-variant);
 	box-shadow: var(--shadow-soft);
+	background: transparent;
 	transition:
 		color var(--duration-medium) var(--ease-standard),
 		box-shadow var(--duration-medium) var(--ease-standard),
 		transform var(--duration-medium) var(--ease-standard);
-}
 
-.cupTick[aria-pressed="true"] {
-	color: var(--primary);
-	background: color-mix(in oklch, var(--soft-accent-muted) 64%, transparent);
-}
+	&[aria-pressed="true"] {
+		color: var(--primary);
+	}
 
-.cupTick:hover {
-	color: var(--on-surface);
-}
+	&:hover {
+		color: var(--on-surface);
+	}
 
-.cupTick:focus-visible {
-	outline: none;
-	box-shadow: var(--shadow-focus);
+	&:focus-visible {
+		outline: none;
+		box-shadow: var(--shadow-focus);
+	}
 }
 
 .cupIcon {

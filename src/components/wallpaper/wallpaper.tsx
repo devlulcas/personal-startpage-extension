@@ -1,9 +1,8 @@
 import { useWallpaperContext } from "../../app/providers/wallpaper-context";
-import { DragOverlay } from "../common/drag-overlay";
 import styles from "./wallpaper.module.css";
 
 export function Wallpaper({ children }: { children: React.ReactNode }) {
-	const { isDraggingFile, wallpaperImage } = useWallpaperContext();
+	const { wallpaperImage } = useWallpaperContext();
 
 	return (
 		<>
@@ -17,8 +16,6 @@ export function Wallpaper({ children }: { children: React.ReactNode }) {
 			<div className={styles.backgroundBlur} />
 
 			{children}
-
-			<DragOverlay active={isDraggingFile} />
 		</>
 	);
 }
