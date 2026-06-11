@@ -1,9 +1,10 @@
-import { GearSixIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { GearSixIcon, NotePencilIcon } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
 import { Button } from "react-aria-components";
 import { Bookmarks } from "../components/bookmark/bookmarks";
 import { Clock } from "../components/clock/clock";
 import { ErrorBoundary } from "../components/common/error-boundary";
+import { NotesWorkspace } from "../components/notes/notes-workspace";
 import { SearchBar } from "../components/search/search-bar";
 import { Shortcuts } from "../components/search/shortcuts";
 import { SettingsDialog } from "../components/settings/settings-dialog";
@@ -22,11 +23,50 @@ function ErrorFallback() {
 	);
 }
 
+function isNotesRoute() {
+	return window.location.hash === "#notes";
+}
+
 export function App() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [notesOpen, setNotesOpen] = useState(() => isNotesRoute());
 	const { features } = useFeatureSettingsContext();
 
 	useUnhandledRejectionHandler();
+
+	useEffect(() => {
+		function handleRouteChange() {
+			setNotesOpen(isNotesRoute());
+		}
+
+		window.addEventListener("hashchange", handleRouteChange);
+		window.addEventListener("popstate", handleRouteChange);
+
+		return () => {
+			window.removeEventListener("hashchange", handleRouteChange);
+			window.removeEventListener("popstate", handleRouteChange);
+		};
+	}, []);
+
+	function openNotes() {
+		window.location.hash = "notes";
+	}
+
+	function closeNotes() {
+		const nextUrl = `${window.location.pathname}${window.location.search}`;
+		window.history.replaceState(null, "", nextUrl);
+		setNotesOpen(false);
+	}
+
+	if (notesOpen) {
+		return (
+			<ErrorBoundary fallback={<ErrorFallback />}>
+				<Wallpaper>
+					<NotesWorkspace onClose={closeNotes} />
+				</Wallpaper>
+			</ErrorBoundary>
+		);
+	}
 
 	return (
 		<ErrorBoundary fallback={<ErrorFallback />}>
@@ -36,6 +76,18 @@ export function App() {
 						<WaterTracker />
 					</div>
 				)}
+
+				<div className={styles.topRightWidget}>
+					<Button
+						type="button"
+						className={styles.notesButton}
+						onPress={openNotes}
+						aria-label="Open notes"
+					>
+						<NotePencilIcon size={22} weight="duotone" />
+						<span>Open notes</span>
+					</Button>
+				</div>
 
 				<main className={styles.main}>
 					<div className={styles.contentWrapper}>

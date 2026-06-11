@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 import { AppIconButton } from "../common/button";
 import { ApiKeysSettingsSection } from "./api-keys-settings-section";
 import { GeneralSettingsSection } from "./general-settings-section";
+import { NotesSettingsSection } from "./notes-settings-section";
 import styles from "./settings-dialog.module.css";
 import { SettingsTabs } from "./settings-tabs";
 import { ShortcutsSettingsSection } from "./shortcuts-settings-section";
@@ -43,6 +44,11 @@ const tabs = [
 		id: "water" as const,
 		label: "Water",
 		content: <WaterSettingsSection />,
+	},
+	{
+		id: "notes" as const,
+		label: "Notes",
+		content: <NotesSettingsSection />,
 	},
 	{
 		id: "apiKeys" as const,

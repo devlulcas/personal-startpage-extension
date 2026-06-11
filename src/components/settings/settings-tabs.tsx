@@ -8,6 +8,7 @@ type SettingsTabKey =
 	| "shortcuts"
 	| "wallpaper"
 	| "water"
+	| "notes"
 	| "apiKeys";
 
 type SettingsTab = {

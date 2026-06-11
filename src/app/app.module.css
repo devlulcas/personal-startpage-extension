@@ -14,6 +14,14 @@
 	z-index: 2;
 }
 
+.topRightWidget {
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding: var(--space-4);
+	z-index: 2;
+}
+
 .contentWrapper {
 	display: flex;
 	flex-direction: column;
@@ -48,14 +56,15 @@
 	margin-inline-end: auto;
 }
 
-.settingsButton {
+.settingsButton,
+.notesButton {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: var(--space-2);
 	border: 1px solid var(--soft-border);
 	background: var(--soft-panel);
 	color: var(--on-surface);
-	width: 40px;
 	height: 40px;
 	border-radius: var(--radius-md);
 	box-shadow: var(--shadow-soft);
@@ -66,17 +75,34 @@
 		transform var(--duration-medium) var(--ease-standard);
 }
 
-.settingsButton:hover {
+.settingsButton {
+	width: 40px;
+}
+
+.notesButton {
+	width: auto;
+	padding-inline: var(--space-3) var(--space-4);
+	font: inherit;
+	font-size: var(--text-sm);
+	font-weight: 650;
+	white-space: nowrap;
+}
+
+.settingsButton:hover,
+.notesButton:hover {
 	background: var(--soft-panel-raised);
 	box-shadow: var(--shadow-raised);
 }
 
-.settingsButton:active {
+.settingsButton:active,
+.notesButton:active {
 	box-shadow: var(--shadow-pressed);
 }
 
 .settingsButton[data-focus-visible],
-.settingsButton:focus-visible {
+.settingsButton:focus-visible,
+.notesButton[data-focus-visible],
+.notesButton:focus-visible {
 	outline: none;
 	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }

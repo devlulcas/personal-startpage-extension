@@ -1,0 +1,103 @@
+.editorSurface {
+	min-block-size: 0;
+	overflow: hidden;
+	background: color-mix(
+		in oklch,
+		transparent var(--notes-glass-transparency-strong),
+		var(--surface-dim)
+	);
+	backdrop-filter: blur(32px) saturate(1.18);
+
+	.cm-editor {
+		block-size: 100%;
+		background: transparent;
+		color: var(--on-surface);
+		caret-color: #ffffff;
+		font-family:
+			"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+		font-size: 14px;
+	}
+
+	.cm-scroller {
+		font-family: inherit;
+		line-height: 1.65;
+	}
+
+	.cm-content {
+		padding: var(--space-5);
+		min-block-size: 100%;
+		caret-color: #ffffff;
+	}
+
+	.cm-gutters {
+		border-inline-end: 0;
+		background: transparent;
+		color: color-mix(in oklch, var(--on-surface-variant) 72%, transparent);
+	}
+
+	.cm-lineNumbers {
+		min-inline-size: 44px;
+	}
+
+	.cm-lineNumbers .cm-gutterElement {
+		padding-inline: var(--space-3) var(--space-2);
+	}
+
+	.cm-editor .cm-cursor,
+	.cm-focused .cm-cursor,
+	.cm-editor .cm-dropCursor {
+		border-left-color: #ffffff;
+		border-left-width: 3px;
+		filter: drop-shadow(0 0 2px oklch(0 0 0 / 0.95))
+			drop-shadow(0 0 4px color-mix(in oklch, var(--primary) 70%, transparent));
+	}
+
+	.cm-selectionBackground,
+	.cm-focused .cm-selectionBackground,
+	::selection {
+		background: color-mix(in oklch, var(--primary) 40%, transparent);
+	}
+
+	.cm-activeLine {
+		/* biome-ignore lint/correctness/noUnknownFunction: contrast-color is intentional progressive CSS for theme-aware active-line contrast. */
+		--active-line-contrast: contrast-color(var(--surface-dim));
+
+		background: color-mix(
+			in oklch,
+			var(--surface-dim) 80%,
+			var(--active-line-contrast)
+		);
+	}
+
+	.cm-activeLineGutter {
+		background: transparent;
+		color: color-mix(in oklch, var(--on-surface) 84%, transparent);
+	}
+
+	.cm-focused {
+		outline: none;
+	}
+
+	.cm-taskMarker {
+		border-radius: 3px;
+		color: color-mix(in oklch, var(--primary) 88%, white);
+		cursor: pointer;
+		font-weight: 700;
+		padding: 0 1px;
+	}
+
+	.cm-taskMarkerOpen {
+		background: color-mix(in oklch, var(--primary) 12%, transparent);
+	}
+
+	.cm-taskMarkerCompleted {
+		background: color-mix(in oklch, var(--tertiary) 16%, transparent);
+		color: color-mix(in oklch, var(--tertiary) 86%, white);
+	}
+
+	.cm-taskLineCompleted {
+		color: color-mix(in oklch, var(--on-surface-variant) 70%, transparent);
+		text-decoration: line-through;
+		text-decoration-thickness: 1px;
+	}
+}

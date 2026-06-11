@@ -3,7 +3,7 @@
 	"name": "StartPage",
 	"version": "1.2.0",
 	"description": "A Simple New Tab (browser's home page)",
-	"permissions": ["search", "bookmarks", "favicon"],
+	"permissions": ["search", "bookmarks", "favicon", "clipboardWrite"],
 	"icons": {
 		"16": "icon16.png",
 		"32": "icon32.png",
