@@ -139,7 +139,11 @@ export function ShortcutsSettingsSection() {
 	}
 
 	function handleDeleteShortcut(id: string) {
-		deleteShortcut(id);
+		const didDelete = deleteShortcut(id);
+		if (!didDelete) {
+			return;
+		}
+
 		if (editingId === id) {
 			resetForm();
 		}
@@ -154,11 +158,16 @@ export function ShortcutsSettingsSection() {
 		}
 
 		const normalizedForm = normalizeShortcutInput(form);
+		const didSave = editingId
+			? updateShortcut(editingId, normalizedForm)
+			: addShortcut(normalizedForm);
+		if (!didSave) {
+			return;
+		}
+
 		if (editingId) {
-			updateShortcut(editingId, normalizedForm);
 			toaster.success("Shortcut updated.");
 		} else {
-			addShortcut(normalizedForm);
 			toaster.success("Shortcut added.");
 		}
 

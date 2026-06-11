@@ -4,6 +4,7 @@ import { toaster } from "../components/toast/toast";
 export function useUnhandledRejectionHandler() {
 	useEffect(() => {
 		function onUnhandledRejection(event: PromiseRejectionEvent) {
+			event.preventDefault();
 			const reason =
 				event.reason instanceof Error
 					? event.reason.message

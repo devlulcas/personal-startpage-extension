@@ -38,12 +38,12 @@ export function normalizeFeatureSettings(input: unknown): FeatureSettings {
 }
 
 export function getFeatureSettings(): FeatureSettings {
-	const stored = localStorage.getItem(STORAGE_KEY);
-	if (!stored) {
-		return { ...DEFAULT_FEATURE_SETTINGS };
-	}
-
 	try {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (!stored) {
+			return { ...DEFAULT_FEATURE_SETTINGS };
+		}
+
 		return normalizeFeatureSettings(JSON.parse(stored));
 	} catch {
 		return { ...DEFAULT_FEATURE_SETTINGS };
@@ -51,8 +51,16 @@ export function getFeatureSettings(): FeatureSettings {
 }
 
 export function saveFeatureSettings(settings: FeatureSettings): void {
-	localStorage.setItem(
-		STORAGE_KEY,
-		JSON.stringify(normalizeFeatureSettings(settings)),
-	);
+	try {
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify(normalizeFeatureSettings(settings)),
+		);
+	} catch (error) {
+		throw new Error(
+			error instanceof Error
+				? `Failed to save feature settings: ${error.message}`
+				: "Failed to save feature settings.",
+		);
+	}
 }

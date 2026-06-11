@@ -1,6 +1,31 @@
 export const SHORTCUT_ICON_OPTIONS = [
 	{ id: "github", label: "GitHub" },
 	{ id: "youtube", label: "YouTube" },
+	{ id: "amazon", label: "Amazon" },
+	{ id: "google", label: "Google" },
+	{ id: "chrome", label: "Chrome" },
+	{ id: "drive", label: "Google Drive" },
+	{ id: "photos", label: "Google Photos" },
+	{ id: "instagram", label: "Instagram" },
+	{ id: "facebook", label: "Facebook" },
+	{ id: "x", label: "X" },
+	{ id: "twitter", label: "Twitter" },
+	{ id: "linkedin", label: "LinkedIn" },
+	{ id: "reddit", label: "Reddit" },
+	{ id: "twitch", label: "Twitch" },
+	{ id: "discord", label: "Discord" },
+	{ id: "slack", label: "Slack" },
+	{ id: "spotify", label: "Spotify" },
+	{ id: "stackoverflow", label: "Stack Overflow" },
+	{ id: "figma", label: "Figma" },
+	{ id: "dribbble", label: "Dribbble" },
+	{ id: "behance", label: "Behance" },
+	{ id: "notion", label: "Notion" },
+	{ id: "dropbox", label: "Dropbox" },
+	{ id: "paypal", label: "PayPal" },
+	{ id: "outlook", label: "Outlook" },
+	{ id: "excel", label: "Excel" },
+	{ id: "teams", label: "Teams" },
 	{ id: "mail", label: "Mail" },
 	{ id: "chat", label: "Chat" },
 	{ id: "sparkle", label: "Sparkle" },
@@ -11,6 +36,34 @@ export const SHORTCUT_ICON_OPTIONS = [
 	{ id: "code", label: "Code" },
 	{ id: "music", label: "Music" },
 	{ id: "calendar", label: "Calendar" },
+	{ id: "shopping", label: "Shopping" },
+	{ id: "cart", label: "Cart" },
+	{ id: "store", label: "Store" },
+	{ id: "camera", label: "Camera" },
+	{ id: "image", label: "Image" },
+	{ id: "design", label: "Design" },
+	{ id: "palette", label: "Palette" },
+	{ id: "writing", label: "Writing" },
+	{ id: "work", label: "Work" },
+	{ id: "news", label: "News" },
+	{ id: "learning", label: "Learning" },
+	{ id: "games", label: "Games" },
+	{ id: "movies", label: "Movies" },
+	{ id: "travel", label: "Travel" },
+	{ id: "maps", label: "Maps" },
+	{ id: "home", label: "Home" },
+	{ id: "finance", label: "Finance" },
+	{ id: "bank", label: "Bank" },
+	{ id: "payments", label: "Payments" },
+	{ id: "food", label: "Food" },
+	{ id: "favorites", label: "Favorites" },
+	{ id: "folder", label: "Folder" },
+	{ id: "docs", label: "Docs" },
+	{ id: "article", label: "Article" },
+	{ id: "cloud", label: "Cloud" },
+	{ id: "database", label: "Database" },
+	{ id: "terminal", label: "Terminal" },
+	{ id: "security", label: "Security" },
 ] as const;
 
 export type ShortcutIconId = (typeof SHORTCUT_ICON_OPTIONS)[number]["id"];
@@ -159,12 +212,12 @@ export function normalizeShortcuts(input: unknown): ShortcutConfig[] {
 }
 
 export function getShortcuts(): ShortcutConfig[] {
-	const stored = localStorage.getItem(STORAGE_KEY);
-	if (!stored) {
-		return DEFAULT_SHORTCUTS.map((shortcut) => ({ ...shortcut }));
-	}
-
 	try {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (!stored) {
+			return DEFAULT_SHORTCUTS.map((shortcut) => ({ ...shortcut }));
+		}
+
 		return normalizeShortcuts(JSON.parse(stored));
 	} catch {
 		return DEFAULT_SHORTCUTS.map((shortcut) => ({ ...shortcut }));
@@ -172,10 +225,18 @@ export function getShortcuts(): ShortcutConfig[] {
 }
 
 export function saveShortcuts(shortcuts: ShortcutConfig[]): void {
-	localStorage.setItem(
-		STORAGE_KEY,
-		JSON.stringify(normalizeShortcuts(shortcuts)),
-	);
+	try {
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify(normalizeShortcuts(shortcuts)),
+		);
+	} catch (error) {
+		throw new Error(
+			error instanceof Error
+				? `Failed to save shortcuts: ${error.message}`
+				: "Failed to save shortcuts.",
+		);
+	}
 }
 
 export function validateShortcutInput(
