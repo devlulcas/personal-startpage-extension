@@ -1,6 +1,9 @@
 .editorSurface {
+	block-size: 100%;
 	min-block-size: 0;
 	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 	background: color-mix(
 		in oklch,
 		transparent var(--notes-glass-transparency-strong),
@@ -8,17 +11,28 @@
 	);
 	backdrop-filter: blur(32px) saturate(1.18);
 
+	.editorMount {
+		flex: 1 1 auto;
+		block-size: 100%;
+		min-block-size: 0;
+	}
+
 	.cm-editor {
 		block-size: 100%;
+		min-block-size: 0;
 		background: transparent;
 		color: var(--on-surface);
 		caret-color: #ffffff;
 		font-family:
 			"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 		font-size: 14px;
+		overflow: hidden;
 	}
 
 	.cm-scroller {
+		block-size: 100%;
+		min-block-size: 0;
+		overflow: auto;
 		font-family: inherit;
 		line-height: 1.65;
 	}

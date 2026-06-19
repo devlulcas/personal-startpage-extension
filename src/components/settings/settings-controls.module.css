@@ -130,16 +130,24 @@
 
 .selectPopover {
 	inline-size: var(--trigger-width);
+	max-inline-size: calc(100vw - var(--space-4));
 	padding: var(--space-1);
+	box-sizing: border-box;
 }
 
 .selectList {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-1);
-	max-block-size: min(280px, var(--popover-available-height));
+	max-block-size: min(
+		220px,
+		var(--popover-available-height),
+		calc(100vh - 48px)
+	);
 	overflow: auto;
+	overscroll-behavior: contain;
 	outline: none;
+	scrollbar-gutter: stable;
 }
 
 .selectItem {

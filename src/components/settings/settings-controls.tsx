@@ -105,7 +105,12 @@ export function AriaSelectField<T extends string>({
 				<SelectValue className={styles.selectValue} />
 				<CaretDownIcon size={16} weight="bold" aria-hidden="true" />
 			</Button>
-			<Popover className={styles.selectPopover}>
+			<Popover
+				className={styles.selectPopover}
+				isNonModal
+				maxHeight={220}
+				containerPadding={8}
+			>
 				<ListBox className={styles.selectList}>
 					{options.map((option) => (
 						<ListBoxItem

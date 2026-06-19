@@ -5,7 +5,6 @@ import {
 	NotePencilIcon,
 	PlusIcon,
 	TrashIcon,
-	XIcon,
 } from "@phosphor-icons/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Input, Menu, MenuItem, Popover } from "react-aria-components";
@@ -83,18 +82,21 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 	const [contentDraft, setContentDraft] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+	const [isSavingForObsidian, setIsSavingForObsidian] = useState(false);
+	const [isExportingToObsidian, setIsExportingToObsidian] = useState(false);
 	const [mobileView, setMobileView] = useState<MobileView>("list");
 	const [noteActionMenu, setNoteActionMenu] =
 		useState<NoteActionMenuState | null>(null);
 	const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const saveOperationIdRef = useRef(0);
 	const longPressTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
 		null,
 	);
 	const actionMenuTriggerRef = useRef<HTMLDivElement | null>(null);
 	const disposableNoteIdsRef = useRef(new Set<string>());
-	const latestDraftRef = useRef({ title: "", content: "" });
 
 	const hasNotes = notes.length > 0;
+	const isSavingToObsidian = isSavingForObsidian || isExportingToObsidian;
 	const selectedNoteChanged = selectedNote
 		? selectedNote.title !== titleDraft || selectedNote.content !== contentDraft
 		: false;
@@ -114,17 +116,73 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 		return selectedNoteChanged ? "Unsaved" : "Saved";
 	}, [saveStatus, selectedNoteChanged]);
 
-	latestDraftRef.current = {
-		title: titleDraft,
-		content: contentDraft,
-	};
-
 	const isSelectedNoteDisposable =
 		selectedNote !== null &&
 		disposableNoteIdsRef.current.has(selectedNote.id) &&
 		selectedNote.title === "Untitled Note" &&
 		titleDraft === "Untitled Note" &&
 		contentDraft.length === 0;
+
+	const clearAutosaveTimer = useCallback(() => {
+		if (autosaveTimeoutRef.current) {
+			clearTimeout(autosaveTimeoutRef.current);
+			autosaveTimeoutRef.current = null;
+		}
+	}, []);
+
+	const applySavedNote = useCallback((note: Note) => {
+		setSelectedNote(note);
+		setNotes((currentNotes) => upsertSummary(currentNotes, note));
+		if (note.title !== "Untitled Note" || note.content.length > 0) {
+			disposableNoteIdsRef.current.delete(note.id);
+		}
+	}, []);
+
+	const saveCurrentDraft = useCallback(async (): Promise<Note | null> => {
+		if (!selectedNote) {
+			return null;
+		}
+
+		if (!selectedNoteChanged) {
+			return selectedNote;
+		}
+
+		clearAutosaveTimer();
+		const operationId = saveOperationIdRef.current + 1;
+		saveOperationIdRef.current = operationId;
+		const noteId = selectedNote.id;
+
+		setSaveStatus("saving");
+		const updateResult = await updateNote(noteId, {
+			title: titleDraft,
+			content: contentDraft,
+		});
+
+		if (
+			operationId !== saveOperationIdRef.current ||
+			selectedNoteId !== noteId
+		) {
+			return null;
+		}
+
+		if (!updateResult.ok) {
+			toaster.error(updateResult.message);
+			setSaveStatus("error");
+			return null;
+		}
+
+		applySavedNote(updateResult.data);
+		setSaveStatus("saved");
+		return updateResult.data;
+	}, [
+		applySavedNote,
+		clearAutosaveTimer,
+		contentDraft,
+		selectedNote,
+		selectedNoteChanged,
+		selectedNoteId,
+		titleDraft,
+	]);
 
 	const refreshNotes = useCallback(async () => {
 		const notesResult = await listNotes();
@@ -175,6 +233,9 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 	}, []);
 
 	useEffect(() => {
+		saveOperationIdRef.current += 1;
+		clearAutosaveTimer();
+
 		if (!selectedNoteId) {
 			setSelectedNote(null);
 			setTitleDraft("");
@@ -209,50 +270,23 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 		return () => {
 			cancelled = true;
 		};
-	}, [refreshNotes, selectedNoteId]);
+	}, [clearAutosaveTimer, refreshNotes, selectedNoteId]);
 
 	useEffect(() => {
 		if (!selectedNote || !selectedNoteChanged) {
 			return;
 		}
 
-		if (autosaveTimeoutRef.current) {
-			clearTimeout(autosaveTimeoutRef.current);
-		}
-
+		clearAutosaveTimer();
 		setSaveStatus("saving");
 		autosaveTimeoutRef.current = setTimeout(async () => {
-			const draft = latestDraftRef.current;
-			const updateResult = await updateNote(selectedNote.id, {
-				title: draft.title,
-				content: draft.content,
-			});
-
-			if (!updateResult.ok) {
-				toaster.error(updateResult.message);
-				setSaveStatus("error");
-				return;
-			}
-
-			setSelectedNote(updateResult.data);
-			setNotes((currentNotes) =>
-				upsertSummary(currentNotes, updateResult.data),
-			);
-			if (
-				updateResult.data.title !== "Untitled Note" ||
-				updateResult.data.content.length > 0
-			) {
-				disposableNoteIdsRef.current.delete(updateResult.data.id);
-			}
-			setSaveStatus("saved");
+			await saveCurrentDraft();
 		}, 450);
 
 		return () => {
-			if (autosaveTimeoutRef.current) {
-				clearTimeout(autosaveTimeoutRef.current);
-			}
+			clearAutosaveTimer();
 		};
-	}, [selectedNote, selectedNoteChanged]);
+	}, [clearAutosaveTimer, saveCurrentDraft, selectedNote, selectedNoteChanged]);
 
 	useEffect(() => {
 		if (
@@ -266,11 +300,13 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 
 	useEffect(() => {
 		return () => {
+			saveOperationIdRef.current += 1;
+			clearAutosaveTimer();
 			if (longPressTimeoutRef.current) {
 				clearTimeout(longPressTimeoutRef.current);
 			}
 		};
-	}, []);
+	}, [clearAutosaveTimer]);
 
 	async function handleCreateNote() {
 		await discardSelectedDisposableNote();
@@ -292,6 +328,8 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 			return false;
 		}
 
+		saveOperationIdRef.current += 1;
+		clearAutosaveTimer();
 		const deleteResult = await deleteNote(selectedNote.id);
 		if (!deleteResult.ok) {
 			toaster.error(deleteResult.message);
@@ -401,26 +439,61 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 		}
 	}
 
-	async function handleExportNote() {
+	const handleExportNote = useCallback(async () => {
 		if (!selectedNote) {
 			return;
 		}
 
-		const noteToExport = selectedNoteChanged
-			? {
-					...selectedNote,
-					title: titleDraft,
-					content: contentDraft,
-				}
-			: selectedNote;
-		const exportResult = await exportNoteToObsidian(noteToExport);
-		if (!exportResult.ok) {
-			toaster.error(exportResult.message);
+		if (isSavingToObsidian) {
 			return;
 		}
 
-		toaster.success("Opened Obsidian export.");
-	}
+		setIsSavingForObsidian(true);
+		let noteToExport: Note | null = null;
+		try {
+			noteToExport = await saveCurrentDraft();
+		} finally {
+			setIsSavingForObsidian(false);
+		}
+		if (!noteToExport) {
+			return;
+		}
+
+		setIsExportingToObsidian(true);
+		try {
+			const exportResult = await exportNoteToObsidian(noteToExport);
+			if (!exportResult.ok) {
+				toaster.error(exportResult.message);
+				return;
+			}
+
+			toaster.success("Saved to Obsidian.");
+		} finally {
+			setIsExportingToObsidian(false);
+		}
+	}, [isSavingToObsidian, saveCurrentDraft, selectedNote]);
+
+	useEffect(() => {
+		if (!notesSettings.saveToObsidianShortcutEnabled) {
+			return;
+		}
+
+		function handleKeyDown(event: KeyboardEvent) {
+			const isSaveShortcut =
+				event.key.toLowerCase() === "s" &&
+				(event.ctrlKey || event.metaKey) &&
+				!event.altKey;
+			if (!isSaveShortcut) {
+				return;
+			}
+
+			event.preventDefault();
+			void handleExportNote();
+		}
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [handleExportNote, notesSettings.saveToObsidianShortcutEnabled]);
 
 	async function handleSelectNote(noteId: string) {
 		if (noteId === selectedNoteId) {
@@ -447,12 +520,6 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 	if (loading) {
 		return (
 			<section className={styles.workspace} aria-label="Notes">
-				<header className={styles.header}>
-					<AppIconButton onPress={handleCloseNotes} aria-label="Close notes">
-						<XIcon size={18} weight="bold" />
-					</AppIconButton>
-					<h1 className={styles.headerTitle}>Notes</h1>
-				</header>
 				<div className={styles.statusState}>Loading notes...</div>
 			</section>
 		);
@@ -470,16 +537,6 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 				} as React.CSSProperties
 			}
 		>
-			<header className={styles.header}>
-				<AppIconButton onPress={handleCloseNotes} aria-label="Close notes">
-					<XIcon size={18} weight="bold" />
-				</AppIconButton>
-				<h1 className={styles.headerTitle}>Notes</h1>
-				<span className={styles.headerMeta}>
-					{notes.length} {notes.length === 1 ? "note" : "notes"}
-				</span>
-			</header>
-
 			<div className={styles.body} data-mobile-view={mobileView}>
 				<aside className={styles.aside} aria-label="Note list">
 					<div className={styles.asideHeader}>
@@ -525,6 +582,17 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 							</div>
 						))}
 					</div>
+
+					<div className={styles.asideFooter}>
+						<AppButton
+							variant="text"
+							className={styles.backButton}
+							onPress={handleCloseNotes}
+						>
+							<ArrowLeftIcon size={16} weight="bold" />
+							Back
+						</AppButton>
+					</div>
 				</aside>
 
 				{selectedNote ? (
@@ -555,7 +623,12 @@ export function NotesWorkspace({ onClose }: NotesWorkspaceProps) {
 							<span className={styles.saveStatus}>{statusLabel}</span>
 							<AppIconButton
 								onPress={handleExportNote}
-								aria-label="Save note to Obsidian"
+								isDisabled={isSavingToObsidian}
+								aria-label={
+									isSavingToObsidian
+										? "Saving note to Obsidian"
+										: "Save note to Obsidian"
+								}
 							>
 								<ExportIcon size={18} weight="bold" />
 							</AppIconButton>

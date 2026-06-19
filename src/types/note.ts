@@ -14,6 +14,7 @@ export type NoteSummary = Pick<
 export type ObsidianNotesSettings = {
 	vault: string;
 	folder: string;
+	saveToObsidianShortcutEnabled: boolean;
 	glassTransparency: number;
 	glassTransparencyStrong: number;
 	glassTransparencySoft: number;

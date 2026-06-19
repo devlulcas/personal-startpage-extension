@@ -7,6 +7,7 @@
 	--notes-glass-transparency: 46%;
 	--notes-glass-transparency-strong: 58%;
 	--notes-glass-transparency-soft: 30%;
+	--notes-footer-height: 53px;
 	--notes-token-comment: color-mix(
 		in oklch,
 		var(--on-surface-variant) 74%,
@@ -20,8 +21,9 @@
 	--notes-token-type: color-mix(in oklch, var(--secondary) 76%, white);
 	--notes-token-monospace: color-mix(in oklch, var(--primary) 72%, white);
 	display: grid;
-	grid-template-rows: auto 1fr;
+	block-size: 100dvh;
 	min-block-size: 100dvh;
+	overflow: hidden;
 	background:
 		linear-gradient(
 			135deg,
@@ -44,46 +46,20 @@
 	color: var(--on-surface);
 }
 
-.header {
-	display: flex;
-	align-items: center;
-	gap: var(--space-3);
-	padding: var(--space-4);
-	border-block-end: 1px solid var(--soft-border);
-	background: color-mix(
-		in oklch,
-		transparent var(--notes-glass-transparency),
-		var(--soft-panel)
-	);
-	box-shadow: var(--shadow-soft);
-	backdrop-filter: blur(28px) saturate(1.18);
-}
-
-.headerTitle {
-	margin: 0;
-	font-size: var(--text-lg);
-	line-height: 1.2;
-}
-
-.headerMeta {
-	margin-inline-start: auto;
-	color: var(--on-surface-variant);
-	font-size: var(--text-sm);
-}
-
 .body {
 	display: grid;
 	grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+	block-size: 100%;
 	min-block-size: 0;
+	overflow: hidden;
 }
 
 .aside {
 	display: grid;
-	grid-template-rows: auto 1fr;
-	gap: var(--space-3);
+	grid-template-rows: auto minmax(0, 1fr) auto;
 	min-block-size: 0;
 	border-inline-end: 1px solid var(--soft-border);
-	padding: var(--space-4);
+	padding: 0;
 	background: color-mix(
 		in oklch,
 		transparent var(--notes-glass-transparency),
@@ -96,6 +72,7 @@
 	display: flex;
 	align-items: center;
 	gap: var(--space-2);
+	padding: var(--space-4);
 }
 
 .asideTitle {
@@ -113,7 +90,52 @@
 	gap: var(--space-2);
 	min-block-size: 0;
 	overflow: auto;
-	padding-block-end: var(--space-4);
+	padding: 0 var(--space-4) var(--space-2);
+}
+
+.asideFooter {
+	display: flex;
+	align-items: stretch;
+	box-sizing: border-box;
+	block-size: var(--notes-footer-height);
+	padding: 0;
+	border-block-start: 1px solid var(--soft-border);
+	background: color-mix(
+		in oklch,
+		transparent var(--notes-glass-transparency-strong),
+		var(--soft-panel)
+	);
+	backdrop-filter: blur(26px) saturate(1.16);
+}
+
+.asideFooter .backButton {
+	inline-size: 100%;
+	block-size: 100%;
+	justify-content: flex-start;
+	gap: var(--space-2);
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--on-surface-variant);
+	padding-inline: var(--space-4);
+}
+
+.asideFooter .backButton[data-hovered] {
+	background: color-mix(in oklch, var(--soft-panel-raised) 56%, transparent);
+	box-shadow: none;
+	color: var(--on-surface);
+}
+
+.asideFooter .backButton[data-pressed] {
+	background: color-mix(in oklch, var(--soft-accent-muted) 72%, transparent);
+	box-shadow: none;
+}
+
+.asideFooter .backButton[data-focus-visible] {
+	outline: none;
+	box-shadow: inset 0 0 0 2px
+		color-mix(in oklch, var(--primary) 46%, var(--soft-border));
 }
 
 .noteItem {
@@ -186,8 +208,10 @@
 .editorPane {
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
+	block-size: 100%;
 	min-block-size: 0;
 	min-inline-size: 0;
+	overflow: hidden;
 	background: color-mix(
 		in oklch,
 		transparent var(--notes-glass-transparency),
@@ -200,7 +224,7 @@
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
 	gap: var(--space-3);
-	align-items: center;
+	align-items: stretch;
 	padding: var(--space-4);
 	border-block-end: 1px solid var(--soft-border);
 	background: color-mix(
@@ -216,16 +240,18 @@
 }
 
 .titleInput {
+	display: block;
 	min-inline-size: 0;
 	inline-size: 100%;
+	block-size: 100%;
 	border: 1px solid transparent;
 	border-radius: var(--radius-sm);
 	background: transparent;
 	color: var(--on-surface);
-	font-size: var(--text-xl);
-	font-weight: 700;
+	font-size: var(--text-base);
+	font-weight: 600;
 	line-height: 1.2;
-	padding: var(--space-2);
+	padding: var(--space-2) var(--space-3);
 }
 
 .titleInput:focus {
@@ -246,7 +272,8 @@
 	align-items: center;
 	justify-content: flex-end;
 	gap: var(--space-3);
-	min-block-size: 40px;
+	box-sizing: border-box;
+	block-size: var(--notes-footer-height);
 	padding: var(--space-2) var(--space-4);
 	border-block-start: 1px solid var(--soft-border);
 	background: color-mix(
@@ -338,14 +365,6 @@
 }
 
 @media (max-width: 720px) {
-	.header {
-		padding: var(--space-3);
-	}
-
-	.headerMeta {
-		display: none;
-	}
-
 	.body {
 		display: block;
 		min-block-size: 0;
@@ -353,11 +372,28 @@
 
 	.aside,
 	.editorPane {
-		block-size: calc(100dvh - 65px);
+		block-size: 100dvh;
 	}
 
 	.aside {
 		border-inline-end: 0;
+		padding: 0;
+	}
+
+	.asideHeader {
+		padding: var(--space-3);
+	}
+
+	.noteList {
+		padding-inline: var(--space-3);
+	}
+
+	.asideFooter {
+		padding: 0;
+	}
+
+	.asideFooter .backButton {
+		padding-inline: var(--space-3);
 	}
 
 	.body[data-mobile-view="editor"] .aside,
@@ -376,11 +412,10 @@
 	}
 
 	.titleInput {
-		font-size: var(--text-lg);
+		font-size: var(--text-sm);
 	}
 
 	.editorFooter {
-		min-block-size: 36px;
 		padding: var(--space-2) var(--space-3);
 	}
 }

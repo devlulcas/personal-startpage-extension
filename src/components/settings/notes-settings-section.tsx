@@ -6,7 +6,11 @@ import {
 import { AppButton } from "../common/button";
 import { Slider } from "../common/slider";
 import { toaster } from "../toast/toast";
-import { SettingsField, SettingsSection } from "./settings-controls";
+import {
+	FeatureToggle,
+	SettingsField,
+	SettingsSection,
+} from "./settings-controls";
 import { SettingsDialog } from "./settings-dialog";
 
 export function NotesSettingsSection() {
@@ -34,12 +38,14 @@ export function NotesSettingsSection() {
 				<input
 					id="obsidian-vault-input"
 					value={settings.vault}
-					onChange={(event) =>
+					onChange={(event) => {
+						const vault = event.currentTarget.value;
+
 						setSettings((currentSettings) => ({
 							...currentSettings,
-							vault: event.currentTarget.value,
-						}))
-					}
+							vault,
+						}));
+					}}
 					placeholder="Personal"
 					autoComplete="off"
 				/>
@@ -49,16 +55,29 @@ export function NotesSettingsSection() {
 				<input
 					id="obsidian-folder-input"
 					value={settings.folder}
-					onChange={(event) =>
+					onChange={(event) => {
+						const folder = event.currentTarget.value;
+
 						setSettings((currentSettings) => ({
 							...currentSettings,
-							folder: event.currentTarget.value,
-						}))
-					}
+							folder,
+						}));
+					}}
 					placeholder="Inbox/StartPage"
 					autoComplete="off"
 				/>
 			</SettingsField>
+
+			<FeatureToggle
+				label="Save to Obsidian with Ctrl+S"
+				checked={settings.saveToObsidianShortcutEnabled}
+				onChange={(saveToObsidianShortcutEnabled) =>
+					setSettings((currentSettings) => ({
+						...currentSettings,
+						saveToObsidianShortcutEnabled,
+					}))
+				}
+			/>
 
 			<Slider
 				label="Glass Transparency"

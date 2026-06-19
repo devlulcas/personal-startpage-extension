@@ -1,16 +1,25 @@
+import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { type CSSProperties, useState } from "react";
+import {
+	Button,
+	Dialog,
+	Heading,
+	Modal,
+	ModalOverlay,
+} from "react-aria-components";
 import { useShortcutsContext } from "../../app/providers/shortcuts-context";
 import {
 	normalizeShortcutInput,
 	SHORTCUT_ICON_OPTIONS,
 	type ShortcutConfig,
+	type ShortcutIconId,
 	validateShortcutInput,
 } from "../../config/shortcuts";
 import { AppButton } from "../common/button";
+import { shortcutIcons } from "../search/shortcut-icons";
 import { toaster } from "../toast/toast";
 import {
 	AriaColorField,
-	AriaSelectField,
 	SettingsErrorMessage,
 	SettingsField,
 	SettingsSection,
@@ -76,11 +85,8 @@ function ShortcutForm({
 			</SettingsField>
 
 			<div className={styles.shortcutFormGrid}>
-				<AriaSelectField
-					id="shortcut-icon-select"
-					label="Icon"
+				<ShortcutIconPicker
 					value={form.icon}
-					options={SHORTCUT_ICON_OPTIONS}
 					onChange={(icon) =>
 						onChange({
 							...form,
@@ -102,6 +108,103 @@ function ShortcutForm({
 			</div>
 
 			<SettingsErrorMessage message={errorMessage} />
+		</div>
+	);
+}
+
+type ShortcutIconPickerProps = {
+	value: ShortcutIconId;
+	onChange: (icon: ShortcutIconId) => void;
+};
+
+function ShortcutIconPicker({ onChange, value }: ShortcutIconPickerProps) {
+	const [isOpen, setIsOpen] = useState(false);
+	const selectedOption =
+		SHORTCUT_ICON_OPTIONS.find((option) => option.id === value) ??
+		SHORTCUT_ICON_OPTIONS[0];
+	const SelectedIcon = shortcutIcons[value];
+
+	function handleSelectIcon(icon: ShortcutIconId) {
+		onChange(icon);
+		setIsOpen(false);
+	}
+
+	return (
+		<div className={styles.iconPickerField}>
+			<span className={styles.iconPickerLabel}>Icon</span>
+			<Button
+				className={styles.iconPickerButton}
+				onPress={() => setIsOpen(true)}
+				aria-label={`Choose shortcut icon, current icon ${selectedOption.label}`}
+			>
+				<span className={styles.iconPickerPreview} aria-hidden="true">
+					<SelectedIcon size={22} weight="duotone" />
+				</span>
+				<span className={styles.iconPickerValue}>{selectedOption.label}</span>
+			</Button>
+
+			<ModalOverlay
+				className={styles.iconPickerOverlay}
+				isOpen={isOpen}
+				onOpenChange={setIsOpen}
+				isDismissable
+			>
+				<Modal className={styles.iconPickerModal}>
+					<Dialog className={styles.iconPickerDialog}>
+						{({ close }) => (
+							<>
+								<header className={styles.iconPickerHeader}>
+									<Heading slot="title" className={styles.iconPickerTitle}>
+										Choose Icon
+									</Heading>
+									<Button
+										className={styles.iconPickerCloseButton}
+										onPress={close}
+										aria-label="Close icon picker"
+									>
+										<XIcon size={18} weight="bold" aria-hidden="true" />
+									</Button>
+								</header>
+
+								<div className={styles.iconPickerGrid}>
+									{SHORTCUT_ICON_OPTIONS.map((option) => {
+										const Icon = shortcutIcons[option.id];
+										const isSelected = option.id === value;
+
+										return (
+											<Button
+												key={option.id}
+												className={styles.iconPickerGridButton}
+												data-selected={isSelected || undefined}
+												onPress={() => handleSelectIcon(option.id)}
+												aria-label={option.label}
+											>
+												<span
+													className={styles.iconPickerGridIcon}
+													aria-hidden="true"
+												>
+													<Icon size={24} weight="duotone" />
+												</span>
+												<span className={styles.iconPickerGridLabel}>
+													{option.label}
+												</span>
+												{isSelected && (
+													<CheckIcon
+														className={styles.iconPickerGridCheck}
+														size={14}
+														weight="bold"
+														aria-hidden="true"
+													/>
+												)}
+											</Button>
+										);
+									})}
+								</div>
+							</>
+						)}
+					</Dialog>
+				</Modal>
+			</ModalOverlay>
 		</div>
 	);
 }

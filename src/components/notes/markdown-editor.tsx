@@ -1,4 +1,9 @@
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+	defaultKeymap,
+	history,
+	historyKeymap,
+	indentWithTab,
+} from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
@@ -248,7 +253,12 @@ export function MarkdownEditor({
 			syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
 			syntaxHighlighting(notesHighlightStyle),
 			taskListPlugin,
-			keymap.of([...defaultKeymap, ...historyKeymap, ...searchKeymap]),
+			keymap.of([
+				indentWithTab,
+				...defaultKeymap,
+				...historyKeymap,
+				...searchKeymap,
+			]),
 			EditorView.lineWrapping,
 			EditorView.updateListener.of((update) => {
 				if (update.docChanged) {
@@ -301,5 +311,5 @@ export function MarkdownEditor({
 		});
 	}, [value]);
 
-	return <div ref={containerRef} />;
+	return <div ref={containerRef} className="editorMount" />;
 }

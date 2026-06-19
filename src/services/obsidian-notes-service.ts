@@ -2,10 +2,10 @@ import { getObsidianNotesSettings } from "../config/notes";
 import type { Note } from "../types/note";
 import { err, ok, type Result } from "../types/result";
 
-type ObsidianExportError =
-	| "invalid_settings"
-	| "clipboard_error"
-	| "open_error";
+type ObsidianExportError = "invalid_settings" | "open_error";
+
+const CLIPBOARD_FALLBACK_CONTENT =
+	"Obsidian could not read the clipboard for this note. Return to StartPage and try saving again.";
 
 function sanitizeFileName(fileName: string): string {
 	return fileName
@@ -52,12 +52,20 @@ async function writeClipboardText(text: string): Promise<boolean> {
 	}
 }
 
-function openObsidianUrl(url: string): Result<null, "open_error"> {
+async function openObsidianUrl(
+	url: string,
+): Promise<Result<null, "open_error">> {
 	try {
-		const opened = window.open(url, "_blank", "noopener,noreferrer");
-		if (opened === null) {
-			window.location.assign(url);
+		if (typeof chrome !== "undefined" && chrome.tabs?.update) {
+			try {
+				await chrome.tabs.update({ url });
+				return ok(null);
+			} catch {
+				// Fall through to the browser navigation path.
+			}
 		}
+
+		window.location.assign(url);
 	} catch {
 		return err("open_error", "Failed to open Obsidian.");
 	}
@@ -79,16 +87,22 @@ export async function exportNoteToObsidian(
 	const noteName = sanitizeFileName(note.title) || "Untitled Note";
 	const folderPath = normalizeFolderPath(settings.folder);
 	const filePath = `${folderPath}/${noteName}`;
-	let obsidianUrl = `obsidian://new?file=${encodeURIComponent(filePath)}&overwrite=true&vault=${encodeURIComponent(settings.vault)}`;
+	const urlParams = new URLSearchParams({
+		file: filePath,
+		overwrite: "true",
+		silent: "true",
+		vault: settings.vault,
+	});
 
 	const clipboardWritten = await writeClipboardText(note.content);
 	if (clipboardWritten) {
-		obsidianUrl += "&clipboard";
+		urlParams.set("clipboard", "true");
+		urlParams.set("content", CLIPBOARD_FALLBACK_CONTENT);
 	} else {
-		obsidianUrl += `&content=${encodeURIComponent(note.content)}`;
+		urlParams.set("content", note.content);
 	}
 
-	const openResult = openObsidianUrl(obsidianUrl);
+	const openResult = await openObsidianUrl(`obsidian://new?${urlParams}`);
 	if (!openResult.ok) {
 		return openResult;
 	}

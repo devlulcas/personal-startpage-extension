@@ -5,6 +5,7 @@ const STORAGE_KEY = "notes_obsidian_settings";
 const DEFAULT_OBSIDIAN_NOTES_SETTINGS: ObsidianNotesSettings = {
 	vault: "",
 	folder: "",
+	saveToObsidianShortcutEnabled: true,
 	glassTransparency: 46,
 	glassTransparencyStrong: 58,
 	glassTransparencySoft: 30,
@@ -22,6 +23,10 @@ function normalizePercentage(value: unknown, fallback: number): number {
 	return Math.min(Math.max(Math.round(value), 0), 90);
 }
 
+function normalizeBoolean(value: unknown, fallback: boolean): boolean {
+	return typeof value === "boolean" ? value : fallback;
+}
+
 export function normalizeObsidianNotesSettings(
 	input: unknown,
 ): ObsidianNotesSettings {
@@ -33,6 +38,10 @@ export function normalizeObsidianNotesSettings(
 	return {
 		vault: normalizeString(raw.vault),
 		folder: normalizeString(raw.folder),
+		saveToObsidianShortcutEnabled: normalizeBoolean(
+			raw.saveToObsidianShortcutEnabled,
+			DEFAULT_OBSIDIAN_NOTES_SETTINGS.saveToObsidianShortcutEnabled,
+		),
 		glassTransparency: normalizePercentage(
 			raw.glassTransparency,
 			DEFAULT_OBSIDIAN_NOTES_SETTINGS.glassTransparency,

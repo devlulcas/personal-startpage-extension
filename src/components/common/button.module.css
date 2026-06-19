@@ -86,3 +86,8 @@
 	outline: none;
 	box-shadow: var(--shadow-soft), var(--shadow-focus);
 }
+
+.iconButton[data-disabled] {
+	opacity: 0.38;
+	pointer-events: none;
+}
